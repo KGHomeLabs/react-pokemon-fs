@@ -1,13 +1,11 @@
-//import { useState } from 'react'
 
-import MyDeckPage from "./MyDeck/MyDeckPage"
+import { PokemonProvider } from './MyDeck/PokemonContext';
+import MyDeckPage from './MyDeck/PokeLibPage';
 
-function App() {
-  return (
-    <div className='App'>
-      <MyDeckPage/>
-    </div>
-  )
-}
+const App = () => (
+  <PokemonProvider useApi={true}>
+    <MyDeckPage />
+  </PokemonProvider>
+);
 
-export default App
+export default App;
