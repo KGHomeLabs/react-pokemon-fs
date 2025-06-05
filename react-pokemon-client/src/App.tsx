@@ -1,6 +1,6 @@
 
-import { PokemonProvider } from './MyDeck/PokemonContext';
-import MyDeckPage from './MyDeck/PokeLibPage';
+import { PokemonProvider } from './SpaPages/Context/PokemonContext';
+import MyDeckPage from './SpaPages/PokeLibPage';
 
 const App = () => (
   <PokemonProvider useApi={true}>

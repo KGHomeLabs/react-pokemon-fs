@@ -1,11 +1,19 @@
-import { Box, Card, CardMedia, CardContent, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import type { Theme } from '@mui/material';
+import type { SxProps } from '@mui/system';
 
-const Footer = ()=> (
-  <Box textAlign="center" mt={5}>
-    <Typography variant="body2" color="textSecondary">
-      "My super fancy footer... but its a component and not just text"
-    </Typography>
-  </Box>
-);
+interface FooterProps {
+  sx?: SxProps<Theme>;
+};
 
-export default Footer;
+export default function Footer({sx}:FooterProps)
+{
+    return (
+        <Box sx={sx}> 
+            <Typography variant="body2" color="textSecondary">
+                "My super fancy footer... but its a component and not just text"
+            </Typography>
+        </Box>
+    );
+};
+

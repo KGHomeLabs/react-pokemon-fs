@@ -5,11 +5,11 @@ interface Pokemon {
   img: string;
 }
 
-interface CardGridProps {
+interface ICardGridProps {
   cards: Pokemon[];
 }
 
-const CardGrid = ({ cards }: CardGridProps) => (
+const CardGrid = ({ cards }: ICardGridProps) => (
   <Box
     sx={{
       display: 'grid',
