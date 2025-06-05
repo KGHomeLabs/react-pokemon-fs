@@ -1,9 +1,11 @@
 
-import { usePokemonContext } from './PokemonContext';
+import { usePokemonContext } from './Context/PokemonContext';
 import CardGrid from '../Components/CardGrid';
 import {Box, Button, Typography, Select, MenuItem, Stack} from '@mui/material';
 import Footer from '../Components/Footer';
-export default function MyDeckPage() {
+
+
+export default function PokeLibPage() {
   const { cards, loading, page, totalPages, setPage } = usePokemonContext();
 
   const handlePrevPage = () => {
@@ -60,9 +62,7 @@ export default function MyDeckPage() {
       </Box>
 
       {/* Footer Text */}
-      <Footer >
-        
-      </Footer>
+      <Footer sx={{textAlign:'center', mt: 5}}/>
     </Box>
   );
 }
