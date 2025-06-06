@@ -12,7 +12,7 @@ export const usePokemonList = ({ limit = 20, offset = 0 }: PokemonListParams = {
       const pokemonListResponse = await pokemonClient.getPokemonList(limit, offset);
       const results: Pokemon[] = pokemonListResponse.results.map((pokemon) => ({
         name: pokemon.name,
-        img: null, // Lazy-load images in PokemonCard
+        img: pokemon.url, // Lazy-load images in PokemonCard
       }));
 
       // Return the formatted result
