@@ -12,3 +12,4 @@ export interface PokemonListParams {
   limit?: number;
   offset?: number;
 }
+
