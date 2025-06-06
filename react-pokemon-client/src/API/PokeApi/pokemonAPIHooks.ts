@@ -1,8 +1,33 @@
 import { useQuery } from '@tanstack/react-query';
 import { pokemonClient } from './PokemonClient';
+import type { Pokemon, PokemonListResult, PokemonListParams } from './APIReturnTypes';
 
-export const usePokemonList = (limit = 20, offset = 0) =>
-  useQuery({ queryKey: ['pokemonList', limit, offset], queryFn: () => pokemonClient.getPokemonList(limit, offset) });
+
+export const usePokemonList = ({ limit = 20, offset = 0 }: PokemonListParams = {}) =>
+  useQuery<PokemonListResult, Error>({
+    queryKey: ['pokemonList', limit, offset],
+    queryFn: async (): Promise<PokemonListResult> => {
+      // Fetch the initial list of Pokémon
+      const pokemonListResponse = await pokemonClient.getPokemonList(limit, offset);
+
+      // Fetch detailed data for each Pokémon concurrently
+      const detailedPokemonData: Pokemon[] = await Promise.all(
+        pokemonListResponse.results.map(async (pokemon: { name: string }) => {
+          const pokemonDetails = await pokemonClient.getPokemonByIdOrName(pokemon.name);
+          return {
+            name: pokemonDetails.name,
+            img: pokemonDetails.sprites.front_default,
+          };
+        })
+      );
+      console.log('Detailed Pokémon Data:', detailedPokemonData);
+      // Return the formatted result
+      return {
+        count: pokemonListResponse.count,
+        results: detailedPokemonData,
+      };
+    },
+  });
 
 export const usePokemonByIdOrName = (idOrName: string | number) =>
   useQuery({ queryKey: ['pokemon', idOrName], queryFn: () => pokemonClient.getPokemonByIdOrName(idOrName) });

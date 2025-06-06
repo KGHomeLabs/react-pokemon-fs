@@ -1,12 +1,31 @@
 
-import { usePokemonContext } from './Context/PokemonContext';
-import CardGrid from '../Components/CardGrid';
-import {Box, Button, Typography, Select, MenuItem, Stack} from '@mui/material';
-import Footer from '../Components/Footer';
+import { useState } from 'react';
+import {Box, Typography, Select, MenuItem, Stack} from '@mui/material';
 
+//Custom Components
+import Footer from '../Components/Footer';
+import CardGrid from '../Components/CardGrid';
+import PokemonStdButton from '../Components/PokemonStdButton';
+//API types and hooks
+import { usePokemonList } from '../API/PokeApi/pokemonAPIHooks';
+import type { Pokemon } from '../API/PokeApi/APIReturnTypes';
+
+const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
-  const { cards, loading, page, totalPages, setPage } = usePokemonContext();
+  const [ page, setPage ] = useState(1);
+  //tells me where the current index starts at
+  const offset = (page - 1) * PAGE_SIZE;
+
+  const { data, isLoading } = usePokemonList({limit:PAGE_SIZE, offset});
+   // <- lazy-load image details later with usePokemonByIdOrName
+  const cards: Pokemon[] = data?.results.map((p: Pokemon) => ({
+    name: p.name,
+    img: p.img ?? '', //TODO: try lazy-load images later
+  })) ?? [];
+
+  const totalCount = data?.count ?? 0;
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const handlePrevPage = () => {
     if (page > 1) setPage(page - 1);
@@ -15,19 +34,19 @@ export default function PokeLibPage() {
     if (page < totalPages) setPage(page + 1);
   };
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (isLoading) return <Typography>Melissa says: Loading...</Typography>;
 
   return (
     <Box sx={{ p: 4 }}>
       {/* Title + New Deck */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4} bgcolor={'#f5f5f5'} p={2} borderRadius={1}>
-        <Button variant="contained" color="error">+ New Deck</Button>
+         <PokemonStdButton>New Deck</PokemonStdButton>
       </Box>
 
       {/* Sort Options */}
       <Stack direction="row" spacing={2} mb={3} alignItems="center">
         <Typography>Sort by:</Typography>
-        <Button variant="contained" color="error">Type</Button>
+        <PokemonStdButton>Type</PokemonStdButton>        
         <Select size="small" value="name">
           <MenuItem value="name">Name</MenuItem>
           <MenuItem value="rarity">Rarity</MenuItem>
@@ -40,25 +59,9 @@ export default function PokeLibPage() {
 
       {/* Pagination Controls */}
       <Box display="flex" justifyContent="center" alignItems="center" mt={3} gap={2}>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handlePrevPage}
-          disabled={page === 1}
-        >
-          Previous
-        </Button>
-        <Typography>
-          Page {page} of {totalPages}
-        </Typography>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleNextPage}
-          disabled={page === totalPages}
-        >
-          Next
-        </Button>
+        <PokemonStdButton onClick={handlePrevPage} disabled={page===1}>Previous</PokemonStdButton>
+          <Typography>Page {page} of {totalPages}</Typography>
+        <PokemonStdButton onClick={handleNextPage} disabled={page === totalPages}>Next</PokemonStdButton>
       </Box>
 
       {/* Footer Text */}

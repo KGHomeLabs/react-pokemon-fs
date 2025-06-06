@@ -1,11 +1,14 @@
 
-import { PokemonProvider } from './SpaPages/Context/PokemonContext';
+
 import MyDeckPage from './SpaPages/PokeLibPage';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const App = () => (
-  <PokemonProvider useApi={true}>
+  <QueryClientProvider client={queryClient}>
     <MyDeckPage />
-  </PokemonProvider>
+  </QueryClientProvider>
 );
 
 export default App;
