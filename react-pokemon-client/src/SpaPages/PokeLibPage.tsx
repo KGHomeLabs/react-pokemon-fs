@@ -9,7 +9,7 @@ import CardGrid from './Components/CardGrid';
 import PokemonStdButton from './Components/PokemonStdButton';
 //API types and hooks
 import { usePokemonList } from '../api/pokeapi.co/pokemonAPIHooks';
-import type { Pokemon } from   '../api/pokeapi.co/APIReturnTypes';
+
 
 const PAGE_SIZE = 20;
 
@@ -19,11 +19,6 @@ export default function PokeLibPage() {
   const offset = (page - 1) * PAGE_SIZE;
 
   const { data, isLoading } = usePokemonList({limit:PAGE_SIZE, offset});
-   // <- lazy-load image details later with usePokemonByIdOrName
-  const cards: Pokemon[] = data?.results.map((p: Pokemon) => ({
-    name: p.name,
-    img: p.img ?? '', //TODO: try lazy-load images later
-  })) ?? [];
 
   const totalCount = data?.count ?? 0;
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
