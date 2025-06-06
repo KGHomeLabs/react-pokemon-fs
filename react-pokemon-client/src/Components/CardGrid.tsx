@@ -1,9 +1,5 @@
 import { Box, Card, CardMedia, CardContent, Typography } from '@mui/material';
-
-interface Pokemon {
-  name: string;
-  img: string;
-}
+import type { Pokemon } from '../API/PokeApi/APIReturnTypes';
 
 interface ICardGridProps {
   cards: Pokemon[];
@@ -27,7 +23,7 @@ const CardGrid = ({ cards }: ICardGridProps) => (
         <CardMedia
           component="img"
           height="140"
-          image={card.img}
+          image={card.img ?? 'https://via.placeholder.com/140'}
           alt={card.name}
         />
         <CardContent>
