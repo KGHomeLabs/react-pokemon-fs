@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Production build output
+dist/
+dist-ssr/
+
+# Vite cache
+.vite/
+
+# Environment variables (local secrets)
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Yarn integrity file (optional)
+.yarn-integrity
+
+# Lock files if only using Yarn (optional)
+package-lock.json
+
+# Mac system files
+.AppleDouble
+.LSOverride
