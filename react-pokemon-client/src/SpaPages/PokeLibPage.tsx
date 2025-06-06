@@ -3,12 +3,13 @@ import { useState } from 'react';
 import {Box, Typography, Select, MenuItem, Stack} from '@mui/material';
 
 //Custom Components
-import Footer from '../Components/Footer';
-import CardGrid from '../Components/CardGrid';
-import PokemonStdButton from '../Components/PokemonStdButton';
+import Footer from './Components/Footer';
+//import CardGrid from '../Components/CardGrid';
+import CardGrid from './Components/CardGrid';
+import PokemonStdButton from './Components/PokemonStdButton';
 //API types and hooks
-import { usePokemonList } from '../API/PokeApi/pokemonAPIHooks';
-import type { Pokemon } from '../API/PokeApi/APIReturnTypes';
+import { usePokemonList } from '../api/pokeapi.co/pokemonAPIHooks';
+import type { Pokemon } from   '../api/pokeapi.co/APIReturnTypes';
 
 const PAGE_SIZE = 20;
 
@@ -55,7 +56,13 @@ export default function PokeLibPage() {
       </Stack>
 
       {/* Card Grid */}
-      <CardGrid cards={cards} />
+      <CardGrid cards={data?.results ?? []} 
+                sx={{ display: 'grid', 
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                      gap: 2 }}
+      >
+
+      </CardGrid>
 
       {/* Pagination Controls */}
       <Box display="flex" justifyContent="center" alignItems="center" mt={3} gap={2}>
