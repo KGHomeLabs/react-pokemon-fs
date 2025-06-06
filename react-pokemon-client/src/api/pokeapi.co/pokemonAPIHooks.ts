@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { pokemonClient } from './PokemonClient';
-import type { Pokemon, PokemonListResult, PokemonListParams } from './APIReturnTypes';
+import type { Pokemon } from './APIReturnTypes';
+import type { PokemonListResult, PokemonListParams } from './APIReturnTypes';
 
 
 export const usePokemonList = ({ limit = 20, offset = 0 }: PokemonListParams = {}) =>
@@ -9,22 +10,15 @@ export const usePokemonList = ({ limit = 20, offset = 0 }: PokemonListParams = {
     queryFn: async (): Promise<PokemonListResult> => {
       // Fetch the initial list of Pokémon
       const pokemonListResponse = await pokemonClient.getPokemonList(limit, offset);
+      const results: Pokemon[] = pokemonListResponse.results.map((pokemon) => ({
+        name: pokemon.name,
+        img: null, // Lazy-load images in PokemonCard
+      }));
 
-      // Fetch detailed data for each Pokémon concurrently
-      const detailedPokemonData: Pokemon[] = await Promise.all(
-        pokemonListResponse.results.map(async (pokemon: { name: string }) => {
-          const pokemonDetails = await pokemonClient.getPokemonByIdOrName(pokemon.name);
-          return {
-            name: pokemonDetails.name,
-            img: pokemonDetails.sprites.front_default,
-          };
-        })
-      );
-      console.log('Detailed Pokémon Data:', detailedPokemonData);
       // Return the formatted result
-      return {
+      return {    //DEfacto dto transfromation happens here
         count: pokemonListResponse.count,
-        results: detailedPokemonData,
+        results,
       };
     },
   });

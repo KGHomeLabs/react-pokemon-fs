@@ -9,12 +9,7 @@ export class HttpClient {
     this.client = client;
   }
 
-  private request<T>(
-    method: HttpMethod,
-    url: string,
-    data?: unknown,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
+  private request<T>(method: HttpMethod, url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.client
       .request<T>({method, url, data,...config,})
       .then((response) => response.data)

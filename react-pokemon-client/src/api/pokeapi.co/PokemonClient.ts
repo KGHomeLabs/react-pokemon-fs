@@ -1,37 +1,37 @@
-import { createAxiosInstance } from '../HttpClient/AxiosInstance';
-import { HttpClient } from '../HttpClient/HttpClient';
-import { POKEMON_V2_API_URLS } from '../urls';
+import { createAxiosInstance } from '../../lib/HttpClient/AxiosInstance';
+import { HttpClient } from '../../lib/HttpClient/HttpClient';
+import { POKEMON_V2_API_URLS } from './urls';
 
 
-export interface NamedAPIResource {
+interface NamedAPIResource {
   name: string;
   url: string;
 }
 
-export interface APIResourceList {
+interface APIResourceList {
   count: number;
   next: string | null;
   previous: string | null;
   results: NamedAPIResource[];
 }
 
-export interface PokemonAbility {
+interface PokemonAbility {
   ability: NamedAPIResource;
   is_hidden: boolean;
   slot: number;
 }
 
-export interface PokemonType {
+interface PokemonType {
   slot: number;
   type: NamedAPIResource;
 }
 
-export interface PokemonSprites {
+interface PokemonSprites {
   front_default: string | null;
   // Add other sprite fields as needed
 }
 
-export interface Pokemon {
+interface Pokemon {
   id: number;
   name: string;
   abilities: PokemonAbility[];
