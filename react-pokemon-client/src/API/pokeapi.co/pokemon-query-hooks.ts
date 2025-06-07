@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { pokemonClient } from './PokemonClient';
-import { toIPokemon, toPokemonListResult } from './DTOMappers';
-import type { IPokemon, IPokemonListResult, IPokemonListParams } from './localReturnTypes';
+import { pokemonClient } from './pokemon-client';
+import { toIPokemon, toPokemonListResult } from './dto-mappers';
+import type { IPokemon, IPokemonListResult, IPokemonListParams } from './local-return-types';
 
 
 export const usePokemonList = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>

@@ -1,5 +1,5 @@
-import type { IAPIPokemon,APIResourceList } from './remoteReturnTypes';
-import type { IPokemon,IPokemonListResult } from './localReturnTypes'; // your UI-facing type
+import type { IAPIPokemon,APIResourceList } from './remote-return-types';
+import type { IPokemon,IPokemonListResult } from './local-return-types'; // your UI-facing type
 
 export const toIPokemon = (api: IAPIPokemon): IPokemon => ({
   id: api.id,
