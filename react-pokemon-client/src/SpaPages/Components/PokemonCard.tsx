@@ -34,7 +34,7 @@ export default function PokemonCard({ name, sx }: PokemonCardProps) {
   return (
     <Card sx={{ ...sx, display: 'flex', flexDirection: 'column', borderRadius: 2, overflow: 'hidden' }}>
       {/* Header bar */}
-      <Box sx={{ height: '4px', backgroundColor: 'grey.500' }} />
+      <Box sx={{ height: '20px', backgroundColor: 'grey.500' }} />
 
       {/* Upper third */}
       <Box sx={{ display: 'flex', flex: '1 1 33%', p: 1 }}>
