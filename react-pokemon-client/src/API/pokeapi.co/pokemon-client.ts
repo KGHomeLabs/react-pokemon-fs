@@ -1,7 +1,7 @@
-import { createAxiosInstance } from '../../lib/HttpClient/AxiosInstance';
-import { HttpClient } from '../../lib/HttpClient/HttpClient';
+import { createAxiosInstance } from '../../lib/http-client/axios-instance';
+import { HttpClient } from '../../lib/http-client/http-client';
 import { POKEMON_V2_API_URLS } from './urls';
-import type {APIResourceList,IAPIPokemon,NamedAPIResource} from './remoteReturnTypes';
+import type {APIResourceList,IAPIPokemon,NamedAPIResource} from './remote-return-types';
 
 
 const axiosInstance = createAxiosInstance(POKEMON_V2_API_URLS.BASE_URL);

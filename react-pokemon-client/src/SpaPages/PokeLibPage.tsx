@@ -8,7 +8,7 @@ import Footer from './Components/Footer';
 import CardGrid from './Components/CardGrid';
 import PokemonStdButton from './Components/PokemonStdButton';
 //API types and hooks
-import { usePokemonList } from '../api/pokeapi.co/pokemonAPIHooks';
+import { usePokemonList } from '../api/pokeapi.co/pokemon-query-hooks';
 
 
 const PAGE_SIZE = 20;

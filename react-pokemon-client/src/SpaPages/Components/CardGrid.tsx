@@ -1,7 +1,7 @@
 import { Box} from '@mui/material';
 import PokemonCard from './PokemonCard';
 import type { SxProps, Theme } from '@mui/material';
-import type { IPokemon } from '../../api/pokeapi.co/localReturnTypes';
+import type { IPokemon } from '../../api/pokeapi.co/local-return-types';
 
 interface ICardGridProps {
   sx?: SxProps<Theme>;
