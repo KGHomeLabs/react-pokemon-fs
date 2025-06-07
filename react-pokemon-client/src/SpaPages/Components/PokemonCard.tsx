@@ -1,4 +1,4 @@
-import { usePokemonByIdOrName } from '../../api/pokeapi.co/pokemonAPIHooks';
+import { usePokemonByIdOrName } from '../../api/pokeapi.co/pokemon-query-hooks';
 import {
   Card,
   CardMedia,
@@ -7,7 +7,7 @@ import {
   Box,
 } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
-import type { IPokemon } from '../../api/pokeapi.co/localReturnTypes'; 
+import type { IPokemon } from '../../api/pokeapi.co/local-return-types'; 
 
 
 interface PokemonCardProps {
