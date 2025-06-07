@@ -1,30 +1,26 @@
 import { useQuery } from '@tanstack/react-query';
 import { pokemonClient } from './PokemonClient';
-import type { Pokemon } from './APIReturnTypes';
-import type { PokemonListResult, PokemonListParams } from './APIReturnTypes';
+import { toIPokemon, toPokemonListResult } from './DTOMappers';
+import type { IPokemon, IPokemonListResult, IPokemonListParams } from './localReturnTypes';
 
 
-export const usePokemonList = ({ limit = 20, offset = 0 }: PokemonListParams = {}) =>
-  useQuery<PokemonListResult, Error>({
+export const usePokemonList = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
+  useQuery<IPokemonListResult, Error>({
     queryKey: ['pokemonList', limit, offset],
-    queryFn: async (): Promise<PokemonListResult> => {
-      // Fetch the initial list of Pokémon
-      const pokemonListResponse = await pokemonClient.getPokemonList(limit, offset);
-      const results: Pokemon[] = pokemonListResponse.results.map((pokemon) => ({
-        name: pokemon.name,
-        img: pokemon.url, // Lazy-load images in PokemonCard
-      }));
-
-      // Return the formatted result
-      return {    //DEfacto dto transfromation happens here
-        count: pokemonListResponse.count,
-        results,
-      };
+    queryFn: async () => {
+      const response = await pokemonClient.getPokemonList(limit, offset);
+      return toPokemonListResult(response);
     },
   });
 
 export const usePokemonByIdOrName = (idOrName: string | number) =>
-  useQuery({ queryKey: ['pokemon', idOrName], queryFn: () => pokemonClient.getPokemonByIdOrName(idOrName) });
+  useQuery<IPokemon>({
+    queryKey: ['pokemon', idOrName],
+    queryFn: async () => {
+      const raw = await pokemonClient.getPokemonByIdOrName(idOrName);
+      return toIPokemon(raw);
+    },
+  });
 
 export const usePokemonSpeciesList = (limit = 20, offset = 0) =>
   useQuery({ queryKey: ['pokemonSpeciesList', limit, offset], queryFn: () => pokemonClient.getPokemonSpeciesList(limit, offset) });
