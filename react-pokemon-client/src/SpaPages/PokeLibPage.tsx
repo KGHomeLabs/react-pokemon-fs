@@ -54,9 +54,7 @@ export default function PokeLibPage() {
       <CardGrid cards={data?.results ?? []} 
                 sx={{ display: 'grid', 
                       gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                      gap: 2 }}
-      >
-
+                      gap: 2 }}>
       </CardGrid>
 
       {/* Pagination Controls */}
