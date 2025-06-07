@@ -1,44 +1,8 @@
-import { createAxiosInstance } from '../HttpClient/AxiosInstance';
-import { HttpClient } from '../HttpClient/HttpClient';
-import { POKEMON_V2_API_URLS } from '../urls';
+import { createAxiosInstance } from '../../lib/HttpClient/AxiosInstance';
+import { HttpClient } from '../../lib/HttpClient/HttpClient';
+import { POKEMON_V2_API_URLS } from './urls';
+import type {APIResourceList,IAPIPokemon,NamedAPIResource} from './remoteReturnTypes';
 
-
-export interface NamedAPIResource {
-  name: string;
-  url: string;
-}
-
-export interface APIResourceList {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: NamedAPIResource[];
-}
-
-export interface PokemonAbility {
-  ability: NamedAPIResource;
-  is_hidden: boolean;
-  slot: number;
-}
-
-export interface PokemonType {
-  slot: number;
-  type: NamedAPIResource;
-}
-
-export interface PokemonSprites {
-  front_default: string | null;
-  // Add other sprite fields as needed
-}
-
-export interface Pokemon {
-  id: number;
-  name: string;
-  abilities: PokemonAbility[];
-  types: PokemonType[];
-  sprites: PokemonSprites;
-  // Add other fields as needed
-}
 
 const axiosInstance = createAxiosInstance(POKEMON_V2_API_URLS.BASE_URL);
 const httpClient = new HttpClient(axiosInstance);
@@ -50,7 +14,7 @@ export const pokemonClient = {
       `${POKEMON_V2_API_URLS.POKEMON_LIST}?limit=${limit}&offset=${offset}`
     ),
   getPokemonByIdOrName: (idOrName: string | number) =>
-    httpClient.get<Pokemon>(POKEMON_V2_API_URLS.POKEMON(idOrName)),
+    httpClient.get<IAPIPokemon>(POKEMON_V2_API_URLS.POKEMON(idOrName)),
 
   // Pokémon Species
   getPokemonSpeciesList: (limit = 20, offset = 0) =>
