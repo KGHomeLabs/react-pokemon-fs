@@ -15,6 +15,6 @@ export default function useDebounce<T>(value: T, delay = 200): T {
     return () => clearTimeout(timer);
   }, [value, delay]); // ← this effect re-runs whenever `value` or `delay` changes
 
-  // 3️⃣ Until the timer finally fires, `debounced` remains at its old value.
+  //Until the timer finally fires, `debounced` remains at its old value.
   return debounced;
 }

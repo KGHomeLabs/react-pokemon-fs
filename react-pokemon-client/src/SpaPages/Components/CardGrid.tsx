@@ -5,7 +5,7 @@ import type { IPokemon } from '../../api/pokeapi.co/local-return-types';
 
 interface ICardGridProps {
   sx?: SxProps<Theme>;
-  cards: IPokemon[];
+  cards: IPokemon[]; 
 }
 
 const CardGrid = ({ sx, cards }: ICardGridProps) => (

@@ -6,14 +6,16 @@ import type { SxProps, Theme } from '@mui/material';
 import type { IPokemon } from '../../api/pokeapi.co/local-return-types';
 import { getRibbonColor } from '../TypeColor';
 import { useState } from 'react';
+import { useFullPokemonList } from '../Context/IPokemonContext';
 
 interface PokemonCardProps {
   name: string;
-  sx?: SxProps<Theme>;
+  sx?: SxProps<Theme>; 
 }
 
 export default function PokemonCard({ name, sx }: PokemonCardProps) {
   const query = usePokemonByIdOrName(name);
+  const { setFilterByPokemonName  } = useFullPokemonList();
   const data: IPokemon | undefined = query.data;
   const isLoading = query.isLoading;
   const [hovered, setHovered] = useState(false);
@@ -75,7 +77,12 @@ export default function PokemonCard({ name, sx }: PokemonCardProps) {
               height: 32,        
             }}
           >
-            <IconButton size="small" sx={{ p: '4px' }} title="Filter by Series">
+            <IconButton 
+              size="small" 
+              sx={{ p: '4px' }} 
+              title="Filter by Series"  
+              onClick={() => setFilterByPokemonName(name)}           
+            >
               <FilterIcon fontSize="small" />
             </IconButton>
             <IconButton size="small" sx={{ p: '4px' }} title="Add to Deck">
