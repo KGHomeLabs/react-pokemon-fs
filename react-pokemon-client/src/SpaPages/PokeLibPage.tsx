@@ -54,26 +54,19 @@ export default function PokeLibPage() {
       </Box>
 
       {/* Sort + Search */}
-      <Stack direction="row" spacing={2} mb={3} alignItems="center">
-        <Typography>Sort by:</Typography>
-        <PokemonStdButton>Type</PokemonStdButton>
-        <Select size="small" value="name">
-          <MenuItem value="name">Name</MenuItem>
-          <MenuItem value="rarity">Rarity</MenuItem>
-          <MenuItem value="set">Set</MenuItem>
-        </Select>
+      <Stack direction="row" spacing={3} mb={3} alignItems="center">
         <TextField
-          label="Search"
+          label="Search by name"
           size="small"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <Typography>Sort by: think of some functions here</Typography>
       </Stack>
-
-      {/* Card Grid or Empty */}
+     
       {total === 0 ? (
         <Typography>No Pokémon match “{search}”</Typography>
-      ) : (
+      ) : ( 
         <>
           <CardGrid cards={subset} 
                     sx={{display: 'grid', 
@@ -92,10 +85,11 @@ export default function PokeLibPage() {
             <PokemonStdButton onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
               Next
             </PokemonStdButton>
-          </Box>
-        </>
-      )}
-
+          </Box>    
+        </>          
+       )
+      }
+    
       <Footer sx={{ textAlign: 'center', mt: 5 }} />
     </Box>
   );
