@@ -1,70 +1,142 @@
 import { usePokemonByIdOrName } from '../../api/pokeapi.co/pokemon-query-hooks';
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  Box,
-} from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Box, IconButton} from '@mui/material';
+import AddIcon from '@mui/icons-material/AddCircleOutline';
+import FilterIcon from '@mui/icons-material/FilterAltOutlined';
 import type { SxProps, Theme } from '@mui/material';
-import type { IPokemon } from '../../api/pokeapi.co/local-return-types'; 
-
+import type { IPokemon } from '../../api/pokeapi.co/local-return-types';
+import { getRibbonColor } from '../TypeColor';
+import { useState } from 'react';
 
 interface PokemonCardProps {
   name: string;
-  sx?: SxProps<Theme>; // For layout wiring
+  sx?: SxProps<Theme>;
 }
 
 export default function PokemonCard({ name, sx }: PokemonCardProps) {
   const query = usePokemonByIdOrName(name);
   const data: IPokemon | undefined = query.data;
   const isLoading = query.isLoading;
+  const [hovered, setHovered] = useState(false);
 
+  const mainType = data?.types?.[0] ?? 'normal';
+  const ribbonColor = getRibbonColor(mainType);
+
+  //Display a loading message if the data is still being fetched
+  //TODO: maybe use a skeleton instead? make it a bit more fancy?
   if (isLoading) {
     return (
-      <Card sx={{ ...sx, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Card
+        sx={{
+          ...sx,
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          gap:"1px",
+        }}>
         <Typography>Loading {name}...</Typography>
       </Card>
     );
   }
-//deconstructuring the data, I dont like that there is no clear interfacte here... hmm 
- // --killed it with an interface>//const img = data?.sprites.front_default ?? '';
-  //const types = data?.types.map((t) => t.type.name).join(', ') ?? '';
 
   return (
-    <Card sx={{ ...sx, display: 'flex', flexDirection: 'column', borderRadius: 2, overflow: 'hidden' }}>
-      {/* Header bar */}
-      <Box sx={{ height: '20px', backgroundColor: 'grey.500' }} />
+    <Card
+      sx={{
+        ...sx,
+        position: 'relative',
+        overflow: 'hidden',
+        gap:"1px"
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Top Ribbon at the top of the card, it shows a color for the type*/}
+      <Box sx={{ height: '15px', backgroundColor: ribbonColor, m: 0, p: 0 }} />
 
-      {/* Upper third */}
-      <Box sx={{ display: 'flex', flex: '1 1 33%', p: 1 }}>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="subtitle1" fontWeight="bold">
+      {/*Function buttons in the card*/}
+      {/* TODO: I dont like all the design stuff in here
+          Function area: shown inline, no absolute positioning */}
+      <Box
+        sx={{
+          height: hovered ? 32 : 0, // Fixed height instead of auto
+          overflow: 'hidden',
+          transition: 'height 0.2s ease',  
+        }}
+     >
+        {hovered && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              px: 1,
+              py: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.03)',
+              gap: 0.5,
+              height: 32,        
+            }}
+          >
+            <IconButton size="small" sx={{ p: '4px' }} title="Filter by Series">
+              <FilterIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" sx={{ p: '4px' }} title="Add to Deck">
+              <AddIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        )}
+      </Box> {/*end of function area*/}
+
+      {/* Main Content, I sperated it in two, this is top... I'm not a designer :-) */}
+      <Box sx= {{
+        display: 'flex',
+        flex: '1 1 33%',
+        px: 1,
+        pt: '1px',    
+        alignItems: 'flex-start', // exact spacing after the button area
+      }}
+      >
+        <Box sx={{ flex: 1 }} >
+          <Typography variant="subtitle1" fontWeight="bold" gutterBottom={false} sx={{ m: 0 }}>
             {name}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            {data?.types}
+            {data?.types?.join(' / ')}
           </Typography>
         </Box>
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           {data?.img && (
             <CardMedia
               component="img"
               image={data?.img}
               alt={name}
-              sx={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+              sx={{
+                maxHeight: '100%',
+                maxWidth: '100%',
+                objectFit: 'contain',
+              }}
             />
           )}
         </Box>
       </Box>
 
-      {/* Lower 2/3rds */}
-      <CardContent sx={{ flex: '1 1 60%' }}>
+      {/* Footer first experiment with custom components*/}
+      <CardContent   
+        sx={{
+          flex: '1 1 auto',
+          p: 1,
+          m: 0,
+          '&:last-child': {pb: 1} // this took forever to find. override MUI's default extra bottom padding          
+        }}
+      >
         <Typography variant="body2" color="text.secondary">
-          {/* Placeholder for future description */}
-          { 'No description available.'}    
-          </Typography>     
-        {/* Placeholder for future stats */}
+          {'No description displayed (yet).'}
+        </Typography>
       </CardContent>
     </Card>
   );
