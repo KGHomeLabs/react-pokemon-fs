@@ -1,31 +1,71 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Box, Typography, Select, MenuItem, Stack, TextField } from '@mui/material';
+import { toast} from 'react-toastify';
+import { Box, Typography, Stack, TextField } from '@mui/material';
 import CardGrid from './Components/CardGrid';
 import PokemonStdButton from './Components/PokemonStdButton';
 import Footer from './Components/Footer';
 import useDebounce from './CustomHooks/useDebounce';
 import { useFullPokemonList } from './Context/IPokemonContext';
-import type { IPokemon } from '../api/pokeapi.co/local-return-types';
+import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
+import type { IPokemon,IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
 
 const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
   // get the full IPokemon[] array, I think it came from the context
-  const { pokemons, isLoading, error } = useFullPokemonList();
+  const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
   const [search, setSearch] = useState('');
   //wenn sich search ändert soll ein timer gesetzt werden, this sets that timer while typing
   //debounced is whatever input of search is after 240ms of no typing
   const debounced = useDebounce(search, 240);
 
+
+  useEffect(() => {
+    if (filterByPokemonName) {
+      toast.info(`Filtering by Pokémon: ${filterByPokemonName}`);
+      setSearch('');
+    }
+  }, [filterByPokemonName]);
+
+  const speciesName = filterByPokemonName
+    ? filterByPokemonName.replace(/-mega.*$/, '') // e.g., "charizard-mega-x" -> "charizard"
+    : null;
+// Fetch species and evolution chain data
+  const speciesQuery = usePokemonSpeciesByIdOrName(speciesName);
+  const evolutionQuery = useEvolutionChainById(speciesQuery.data?.evolutionChainId ?? 0);
+
   //run function every time the pokemons array or debounced search changes
   //but... tres importante... only the value changed no re-renders
   //useRef for functions
-  const filtered: IPokemon[] = useMemo(  //<.... this are what we work with
-    () => pokemons.filter(
-      (p) => p.name.toLowerCase().includes(debounced.toLowerCase())),
-      [pokemons, debounced]
-  );
+   // Compute filtered Pokémon list
+ const filtered: IPokemon[] = useMemo(() => {
+    if (filterByPokemonName && speciesQuery.data && evolutionQuery.data) {
+      const getEvolutionNames = (chain: IEvolutionChainLink): string[] => {
+        if (!chain.speciesName) return [];
+        let names = [chain.speciesName];
+        if (chain.evolvesTo.length > 0) {
+          chain.evolvesTo.forEach((evo) => {
+            names.push(...getEvolutionNames(evo));
+          });
+        } else {
+           // Add Mega Evolutions for final species
+           const megaForms = pokemons
+             .filter(p => new RegExp(`^${chain.speciesName}-mega(-[xy])?$`, 'i').test(p.name))
+             .map(p => p.name);
+           names = [...names, ...megaForms];
+         }
+
+        return [...new Set(names)]; 
+      };
+      const pokemonNames = getEvolutionNames(evolutionQuery.data.chain);
+      console.log('Evolution chain names:', pokemonNames);
+      return pokemonNames
+        .map((name) => pokemons.find((p) => p.name === name))
+        .filter((p): p is IPokemon => !!p);
+    }
+    return pokemons.filter((p) => p.name.toLowerCase().includes(debounced.toLowerCase()));
+  }, [pokemons, debounced, filterByPokemonName, speciesQuery.data, evolutionQuery.data]);
 
   // pagination values
   const [page, setPage] = useState(1);
@@ -41,16 +81,27 @@ export default function PokeLibPage() {
   // so that the user doesn't end up on a page that doesn't exist
   useEffect(() => {
     setPage(1);
-  }, [debounced]);
+  }, [debounced,filterByPokemonName]);
 
   if (isLoading) return <Typography>Loading Pokémon list…</Typography>;
   if (error)     return <Typography color="error">Error loading list</Typography>;
-
+  if (filterByPokemonName && (speciesQuery.error || evolutionQuery.error)) {
+    return (
+      <Typography color="error">
+        Error loading series for {filterByPokemonName}: {speciesQuery.error?.message || evolutionQuery.error?.message || 'Invalid species'}
+      </Typography>
+    );
+  }
   return (
     <Box sx={{ p: 4 }}>
       {/* Top bar */}
       <Box display="flex" justifyContent="space-between" mb={4} bgcolor="#f5f5f5" p={2} borderRadius={1}>
         <PokemonStdButton>New Deck</PokemonStdButton>
+        {filterByPokemonName && (
+          <PokemonStdButton onClick={() => setFilterByPokemonName(null)}>
+            Clear Filter
+          </PokemonStdButton>
+        )}      
       </Box>
 
       {/* Sort + Search */}

@@ -1,5 +1,5 @@
-import type { IAPIPokemon,APIResourceList } from './remote-return-types';
-import type { IPokemon,IPokemonListResult } from './local-return-types'; // your UI-facing type
+import type { IAPIPokemon, APIResourceList, IAPIPokemonSpecies, IAPIEvolutionChain, IAPIEvolutionChainLink } from './remote-return-types';
+import type { IPokemon, IPokemonListResult, IPokemonSpecies, IEvolutionChain, IEvolutionChainLink } from './local-return-types';
 
 export const toIPokemon = (api: IAPIPokemon): IPokemon => ({
   id: api.id,
@@ -7,17 +7,33 @@ export const toIPokemon = (api: IAPIPokemon): IPokemon => ({
   img: api.sprites.front_default ?? null,
   types: api.types.map(t => t.type.name),
   abilities: api.abilities.map(a => a.ability.name),
-  stats: {} // fill in later if needed
+  stats: {},
 });
 
 export const toPokemonListResult = (apiList: APIResourceList): IPokemonListResult => ({
   count: apiList.count,
   results: apiList.results.map((r) => ({
-    id: -1, // Unknown for now
+    id: -1,
     name: r.name,
-    img: r.url, // This is just a placeholder to be resolved later
+    img: r.url,
     types: [],
     abilities: [],
     stats: {},
   })),
+});
+
+export const toIPokemonSpecies = (api: IAPIPokemonSpecies): IPokemonSpecies => ({
+  id: api.id,
+  name: api.name,
+  evolutionChainId: parseInt(api.evolution_chain.url.split('/').filter(Boolean).pop() || '0', 10),
+});
+
+export const toIEvolutionChain = (api: IAPIEvolutionChain): IEvolutionChain => ({
+  id: api.id,
+  chain: toIEvolutionChainLink(api.chain),
+});
+
+const toIEvolutionChainLink = (api: IAPIEvolutionChainLink): IEvolutionChainLink => ({
+  speciesName: api.species?.name ?? '',
+  evolvesTo: api.evolves_to?.map(toIEvolutionChainLink) ?? [],
 });

@@ -1,4 +1,3 @@
-
 export interface NamedAPIResource {
   name: string;
   url: string;
@@ -11,15 +10,14 @@ export interface APIResourceList {
   results: NamedAPIResource[];
 }
 
-
 export interface IAPIPokemon {
   id: number;
   name: string;
   abilities: IPokemonAbility[];
   types: IPokemonType[];
   sprites: IPokemonSprites;
-  // Add other fields as needed
 }
+
 export interface IPokemonAbility {
   ability: NamedAPIResource;
   is_hidden: boolean;
@@ -33,7 +31,20 @@ export interface IPokemonType {
 
 export interface IPokemonSprites {
   front_default: string | null;
-  // Add other sprite fields as needed
 }
 
+export interface IAPIPokemonSpecies {
+  id: number;
+  name: string;
+  evolution_chain: NamedAPIResource;
+}
 
+export interface IAPIEvolutionChain {
+  id: number;
+  chain: IAPIEvolutionChainLink;
+}
+
+export interface IAPIEvolutionChainLink {
+  species: NamedAPIResource;
+  evolves_to: IAPIEvolutionChainLink[];
+}

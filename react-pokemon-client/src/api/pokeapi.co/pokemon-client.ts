@@ -1,7 +1,7 @@
 import { createAxiosInstance } from '../../lib/http-client/axios-instance';
 import { HttpClient } from '../../lib/http-client/http-client';
 import { POKEMON_V2_API_URLS } from './urls';
-import type {APIResourceList,IAPIPokemon,NamedAPIResource} from './remote-return-types';
+import type {APIResourceList,IAPIPokemon,NamedAPIResource,IAPIPokemonSpecies,IAPIEvolutionChain} from './remote-return-types';
 
 
 const axiosInstance = createAxiosInstance(POKEMON_V2_API_URLS.BASE_URL);
@@ -22,7 +22,7 @@ export const pokemonClient = {
       `${POKEMON_V2_API_URLS.POKEMON_SPECIES_LIST}?limit=${limit}&offset=${offset}`
     ),
   getPokemonSpeciesByIdOrName: (idOrName: string | number) =>
-    httpClient.get<NamedAPIResource>(
+    httpClient.get<IAPIPokemonSpecies>(
       POKEMON_V2_API_URLS.POKEMON_SPECIES(idOrName)
     ),
 
@@ -106,7 +106,7 @@ export const pokemonClient = {
 
   // Evolution Chains
   getEvolutionChainById: (id: number) =>
-    httpClient.get<NamedAPIResource>(
+    httpClient.get<IAPIEvolutionChain>(
       POKEMON_V2_API_URLS.EVOLUTION_CHAIN(id)
     ),
 

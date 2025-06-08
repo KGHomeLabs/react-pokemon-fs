@@ -1,19 +1,20 @@
-// src/contexts/PokemonListContext.tsx
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { usePokemonList } from '../../api/pokeapi.co/pokemon-query-hooks';
 import type { IPokemon } from '../../api/pokeapi.co/local-return-types';
 
-interface IPokemonContextContextValue {
+interface IPokemonContextValue {
   pokemons: IPokemon[];
   isLoading: boolean;
   error: unknown;
+ filterByPokemonName: string | null;
+ setFilterByPokemonName: (name: string | null) => void;
 }
 
-const PokemonContext = createContext<IPokemonContextContextValue | null>(null);
+const PokemonContext = createContext<IPokemonContextValue | null>(null);
 
 export const PokemonContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  // fetch *all* entries once
   const { data, isLoading, error } = usePokemonList({ limit: 100_000, offset: 0 });
+  const [filterByPokemonName, setFilterByPokemonName] = useState<string | null>(null);
 
   return (
     <PokemonContext.Provider
@@ -21,6 +22,8 @@ export const PokemonContextProvider: React.FC<React.PropsWithChildren> = ({ chil
         pokemons: data?.results ?? [],
         isLoading,
         error,
+        filterByPokemonName,
+        setFilterByPokemonName,
       }}
     >
       {children}
@@ -30,6 +33,6 @@ export const PokemonContextProvider: React.FC<React.PropsWithChildren> = ({ chil
 
 export function useFullPokemonList() {
   const ctx = useContext(PokemonContext);
-  if (!ctx) throw new Error('useFullPokemonList must be inside <PokemonListProvider>');
+  if (!ctx) throw new Error('useFullPokemonList must be inside <PokemonContextProvider>');
   return ctx;
 }

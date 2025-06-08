@@ -16,3 +16,19 @@ export interface IPokemonListParams {
   limit?: number;
   offset?: number;
 }
+
+export interface IPokemonSpecies {
+  id: number;
+  name: string;
+  evolutionChainId: number; // Extracted ID for the evolution chain
+}
+
+export interface IEvolutionChain {
+  id: number;
+  chain: IEvolutionChainLink;
+}
+
+export interface IEvolutionChainLink {
+  speciesName: string;
+  evolvesTo: IEvolutionChainLink[];
+}
