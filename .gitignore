@@ -14,7 +14,8 @@ Thumbs.db
 dist/
 build/
 
-Designs/
+
+designs/targets.txt
 # Optional:
 .env
 .env.local
