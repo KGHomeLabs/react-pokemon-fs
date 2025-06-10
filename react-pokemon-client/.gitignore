@@ -34,6 +34,11 @@ dist-ssr/
 
 # Yarn integrity file (optional)
 .yarn-integrity
+.yarn/*
+!.yarn/releases/
+!.yarn/plugins/
+!.yarn/sdks/
+!.yarn/versions/
 
 # Lock files if only using Yarn (optional)
 package-lock.json

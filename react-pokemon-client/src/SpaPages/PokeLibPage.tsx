@@ -1,71 +1,147 @@
-
-import { useState } from 'react';
-import {Box, Typography, Select, MenuItem, Stack} from '@mui/material';
-
-//Custom Components
-import Footer from './Components/Footer';
-//import CardGrid from '../Components/CardGrid';
+import { useState, useMemo, useEffect } from 'react';
+import { toast} from 'react-toastify';
+import { Box, Typography, Stack, TextField } from '@mui/material';
 import CardGrid from './Components/CardGrid';
 import PokemonStdButton from './Components/PokemonStdButton';
-//API types and hooks
-import { usePokemonList } from '../api/pokeapi.co/pokemonAPIHooks';
-
+import Footer from './Components/Footer';
+import useDebounce from './CustomHooks/useDebounce';
+import { useFullPokemonList } from './Context/IPokemonContext';
+import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
+import type { IPokemon,IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
 
 const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
-  const [ page, setPage ] = useState(1);
-  //tells me where the current index starts at
-  const offset = (page - 1) * PAGE_SIZE;
+  // get the full IPokemon[] array, I think it came from the context
+  const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
+  //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
+  const [search, setSearch] = useState('');
+  //wenn sich search ändert soll ein timer gesetzt werden, this sets that timer while typing
+  //debounced is whatever input of search is after 240ms of no typing
+  const debounced = useDebounce(search, 240);
 
-  const { data, isLoading } = usePokemonList({limit:PAGE_SIZE, offset});
 
-  const totalCount = data?.count ?? 0;
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  useEffect(() => {
+    if (filterByPokemonName) {
+      toast.info(`Filtering by Pokémon: ${filterByPokemonName}`);
+      setSearch('');
+    }
+  }, [filterByPokemonName]);
 
-  const handlePrevPage = () => {
-    if (page > 1) setPage(page - 1);
-  };
-  const handleNextPage = () => {
-    if (page < totalPages) setPage(page + 1);
-  };
+  const speciesName = filterByPokemonName
+    ? filterByPokemonName.replace(/-mega.*$/, '') // e.g., "charizard-mega-x" -> "charizard"
+    : null;
+// Fetch species and evolution chain data
+  const speciesQuery = usePokemonSpeciesByIdOrName(speciesName);
+  const evolutionQuery = useEvolutionChainById(speciesQuery.data?.evolutionChainId ?? 0);
 
-  if (isLoading) return <Typography>Melissa says: Loading...</Typography>;
+  //run function every time the pokemons array or debounced search changes
+  //but... tres importante... only the value changed no re-renders
+  //useRef for functions
+   // Compute filtered Pokémon list
+ const filtered: IPokemon[] = useMemo(() => {
+    if (filterByPokemonName && speciesQuery.data && evolutionQuery.data) {
+      const getEvolutionNames = (chain: IEvolutionChainLink): string[] => {
+        if (!chain.speciesName) return [];
+        let names = [chain.speciesName];
+        if (chain.evolvesTo.length > 0) {
+          chain.evolvesTo.forEach((evo) => {
+            names.push(...getEvolutionNames(evo));
+          });
+        } else {
+           // Add Mega Evolutions for final species
+           const megaForms = pokemons
+             .filter(p => new RegExp(`^${chain.speciesName}-mega(-[xy])?$`, 'i').test(p.name))
+             .map(p => p.name);
+           names = [...names, ...megaForms];
+         }
 
+        return [...new Set(names)]; 
+      };
+      const pokemonNames = getEvolutionNames(evolutionQuery.data.chain);
+      console.log('Evolution chain names:', pokemonNames);
+      return pokemonNames
+        .map((name) => pokemons.find((p) => p.name === name))
+        .filter((p): p is IPokemon => !!p);
+    }
+    return pokemons.filter((p) => p.name.toLowerCase().includes(debounced.toLowerCase()));
+  }, [pokemons, debounced, filterByPokemonName, speciesQuery.data, evolutionQuery.data]);
+
+  // pagination values
+  const [page, setPage] = useState(1);
+  const total     = filtered.length;
+  const totalPages= Math.ceil(total / PAGE_SIZE);
+  const offset    = (page - 1) * PAGE_SIZE;
+
+   // this implemnts pagination and produces filtered array of IPokemon
+  const subset    = filtered.slice(offset, offset + PAGE_SIZE);
+
+  // reset page when search changes with a valid debounce
+  // this is to reset the page to 1 when the search changes
+  // so that the user doesn't end up on a page that doesn't exist
+  useEffect(() => {
+    setPage(1);
+  }, [debounced,filterByPokemonName]);
+
+  if (isLoading) return <Typography>Loading Pokémon list…</Typography>;
+  if (error)     return <Typography color="error">Error loading list</Typography>;
+  if (filterByPokemonName && (speciesQuery.error || evolutionQuery.error)) {
+    return (
+      <Typography color="error">
+        Error loading series for {filterByPokemonName}: {speciesQuery.error?.message || evolutionQuery.error?.message || 'Invalid species'}
+      </Typography>
+    );
+  }
   return (
     <Box sx={{ p: 4 }}>
-      {/* Title + New Deck */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4} bgcolor={'#f5f5f5'} p={2} borderRadius={1}>
-         <PokemonStdButton>New Deck</PokemonStdButton>
+      {/* Top bar */}
+      <Box display="flex" justifyContent="space-between" mb={4} bgcolor="#f5f5f5" p={2} borderRadius={1}>
+        <PokemonStdButton>New Deck</PokemonStdButton>
+        {filterByPokemonName && (
+          <PokemonStdButton onClick={() => setFilterByPokemonName(null)}>
+            Clear Filter
+          </PokemonStdButton>
+        )}      
       </Box>
 
-      {/* Sort Options */}
-      <Stack direction="row" spacing={2} mb={3} alignItems="center">
-        <Typography>Sort by:</Typography>
-        <PokemonStdButton>Type</PokemonStdButton>        
-        <Select size="small" value="name">
-          <MenuItem value="name">Name</MenuItem>
-          <MenuItem value="rarity">Rarity</MenuItem>
-          <MenuItem value="set">Set</MenuItem>
-        </Select>
+      {/* Sort + Search */}
+      <Stack direction="row" spacing={3} mb={3} alignItems="center">
+        <TextField
+          label="Search by name"
+          size="small"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Typography>Sort by: think of some functions here</Typography>
       </Stack>
+     
+      {total === 0 ? (
+        <Typography>No Pokémon match “{search}”</Typography>
+      ) : ( 
+        <>
+          <CardGrid cards={subset} 
+                    sx={{display: 'grid', 
+                         gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
+                         gap: 2 }}
+                         />
 
-      {/* Card Grid */}
-      <CardGrid cards={data?.results ?? []} 
-                sx={{ display: 'grid', 
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                      gap: 2 }}>
-      </CardGrid>
-
-      {/* Pagination Controls */}
-      <Box display="flex" justifyContent="center" alignItems="center" mt={3} gap={2}>
-        <PokemonStdButton onClick={handlePrevPage} disabled={page===1}>Previous</PokemonStdButton>
-          <Typography>Page {page} of {totalPages}</Typography>
-        <PokemonStdButton onClick={handleNextPage} disabled={page === totalPages}>Next</PokemonStdButton>
-      </Box>
-
-      {/* Footer Text */}
-      <Footer sx={{textAlign:'center', mt: 5}}/>
+          {/* Pagination */}
+          <Box display="flex" justifyContent="center" mt={3} gap={2}>
+            <PokemonStdButton onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
+              Previous
+            </PokemonStdButton>
+            <Typography>
+              Page {page} of {totalPages}
+            </Typography>
+            <PokemonStdButton onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
+              Next
+            </PokemonStdButton>
+          </Box>    
+        </>          
+       )
+      }
+    
+      <Footer sx={{ textAlign: 'center', mt: 5 }} />
     </Box>
   );
 }

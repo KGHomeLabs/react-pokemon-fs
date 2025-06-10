@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { pokemonClient } from './PokemonClient';
-import { toIPokemon, toPokemonListResult } from './DTOMappers';
-import type { IPokemon, IPokemonListResult, IPokemonListParams } from './localReturnTypes';
+import { pokemonClient } from './pokemon-client';
+import { toIPokemon, toPokemonListResult,toIPokemonSpecies,toIEvolutionChain } from './dto-mappers';
+import type { IPokemon, 
+  IPokemonListResult, 
+  IPokemonListParams,
+  IPokemonSpecies,
+  IEvolutionChain } from './local-return-types';
 
 
 export const usePokemonList = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
@@ -25,8 +29,21 @@ export const usePokemonByIdOrName = (idOrName: string | number) =>
 export const usePokemonSpeciesList = (limit = 20, offset = 0) =>
   useQuery({ queryKey: ['pokemonSpeciesList', limit, offset], queryFn: () => pokemonClient.getPokemonSpeciesList(limit, offset) });
 
-export const usePokemonSpeciesByIdOrName = (idOrName: string | number) =>
-  useQuery({ queryKey: ['pokemonSpecies', idOrName], queryFn: () => pokemonClient.getPokemonSpeciesByIdOrName(idOrName) });
+export const usePokemonSpeciesByIdOrName = (idOrName: string | number | null) =>
+  useQuery<IPokemonSpecies, Error>({
+    queryKey: ['pokemonSpecies', idOrName],
+    queryFn: async () => {
+      if (!idOrName) {
+        throw new Error('Valid idOrName is required for fetching Pokémon species');
+      }
+      const raw = await pokemonClient.getPokemonSpeciesByIdOrName(idOrName);
+      if (!raw.id || !raw.name || !raw.evolution_chain) {
+        throw new Error(`Invalid species data for ${idOrName}`);
+       } 
+      return toIPokemonSpecies(raw);
+    },
+    enabled: !!idOrName && (typeof idOrName !== 'string' || idOrName.trim() !== ''),
+  });
 
 export const useAbilityList = (limit = 20, offset = 0) =>
   useQuery({ queryKey: ['abilityList', limit, offset], queryFn: () => pokemonClient.getAbilityList(limit, offset) });
@@ -86,7 +103,17 @@ export const useGenerationByIdOrName = (idOrName: string | number) =>
   useQuery({ queryKey: ['generation', idOrName], queryFn: () => pokemonClient.getGenerationByIdOrName(idOrName) });
 
 export const useEvolutionChainById = (id: number) =>
-  useQuery({ queryKey: ['evolutionChain', id], queryFn: () => pokemonClient.getEvolutionChainById(id) });
+  useQuery<IEvolutionChain, Error>({
+    queryKey: ['evolutionChain', id],
+    queryFn: async () => {
+      const raw = await pokemonClient.getEvolutionChainById(id);
+      if (!raw.id || !raw.chain || !raw.chain.species) {
+        throw new Error(`Invalid evolution chain data for ID ${id}`);
+      }
+      return toIEvolutionChain(raw);
+    },
+    enabled: id > 0,
+  });
 
 export const useGenderByIdOrName = (idOrName: string | number) =>
   useQuery({ queryKey: ['gender', idOrName], queryFn: () => pokemonClient.getGenderByIdOrName(idOrName) });
