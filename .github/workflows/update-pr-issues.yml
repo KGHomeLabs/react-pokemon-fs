@@ -1,24 +1,21 @@
 name: Update PR with Issue Numbers
 
 on:
-     pull_request:
-          types: [opened, synchronize]
+     pull_request_target:
+          types: [opened]
 
 jobs:
      update-pr:
           runs-on: ubuntu-latest
           steps:
-               - name: Checkout code
-                 uses: actions/checkout@v4
+               - uses: actions/checkout@v4
                  with:
-                      fetch-depth: 0 # Fetch all history for commit analysis
-
-               - name: Extract Issue Numbers
-                 id: extract-issues
+                      fetch-depth: 0
+               - name: Extract Issues
+                 id: extract
                  run: |
-                      issues=$(git log ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} --pretty=format:'%s' | grep -o '#[0-9]\+' | sort -u | paste -sd ',' -)
+                      issues=$(git log origin/${{ github.event.pull_request.base.ref }}..${{ github.event.pull_request.head.ref }} --pretty=format:'%s' | grep -o '#[0-9]\+' | sort -u | paste -sd ',' -)
                       echo "issues=$issues" >> $GITHUB_OUTPUT
-
                - name: Update PR Description
                  uses: actions/github-script@v6
                  with:
@@ -26,7 +23,7 @@ jobs:
                       script: |
                            const pr = context.payload.pull_request
                            const issues = process.env.issues ? `\n\n**Related Issues:** ${process.env.issues}` : ''
-                           const body = `${pr.body || ''}${issues}`
+                           const body = `${issues}\n\nAdd your description here...`
                            await github.rest.issues.update({
                              owner: context.repo.owner,
                              repo: context.repo.repo,
