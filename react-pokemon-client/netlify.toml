@@ -1,0 +1,7 @@
+[build]
+  base = "react-pokemon-client"
+  command = "yarn install --frozen-lockfile && yarn build"
+  publish = "dist"
+[build.environment]
+  NODE_VERSION = "22.16.0"
+  YARN_VERSION = "4.9.2"
