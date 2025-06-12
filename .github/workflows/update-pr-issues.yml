@@ -30,3 +30,6 @@ jobs:
                              issue_number: pr.number,
                              body: body
                            })
+permissions:
+     issues: write
+     pull-requests: write
