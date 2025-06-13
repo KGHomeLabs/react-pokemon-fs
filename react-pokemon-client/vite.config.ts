@@ -35,7 +35,12 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //in case we are not in vite development mode...
     //TODO: think about if defaulting to Dev is actually smart,
     //      because if it fails on production prod might be a dev version then
-    return process.env.VITE_APP_ENV as AppEnv ?? AppEnv.Development; 
+      const env = process.env.VITE_APP_ENV as AppEnv;
+      if (env === AppEnv.Production || env === AppEnv.Preview) {
+        return env;
+      }
+      console.warn('VITE_APP_ENV not set or invalid, defaulting to production');
+      return AppEnv.Production; // Safer default for non-dev builds
   }
 }
 
