@@ -7,7 +7,9 @@ import Footer from './Components/Footer';
 import useDebounce from './CustomHooks/useDebounce';
 import { useFullPokemonList } from './Context/IPokemonContext';
 import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
+import { Logger,LogLevel } from '../utils/logger'
 import type { IPokemon,IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
+import { isDev, isPreview, isProd } from '../utils/env';
 
 const PAGE_SIZE = 20;
 
@@ -58,8 +60,7 @@ export default function PokeLibPage() {
 
         return [...new Set(names)]; 
       };
-      const pokemonNames = getEvolutionNames(evolutionQuery.data.chain);
-      console.log('Evolution chain names:', pokemonNames);
+      const pokemonNames = getEvolutionNames(evolutionQuery.data.chain);      
       return pokemonNames
         .map((name) => pokemons.find((p) => p.name === name))
         .filter((p): p is IPokemon => !!p);
@@ -82,7 +83,7 @@ export default function PokeLibPage() {
   useEffect(() => {
     setPage(1);
   }, [debounced,filterByPokemonName]);
-
+  Logger.log(LogLevel.Info, `Envs:dev ${isDev()} or prev ${isPreview()} or prod ${isProd()}}`)
   if (isLoading) return <Typography>Loading Pokémon list…</Typography>;
   if (error)     return <Typography color="error">Error loading list</Typography>;
   if (filterByPokemonName && (speciesQuery.error || evolutionQuery.error)) {
@@ -96,7 +97,7 @@ export default function PokeLibPage() {
     <Box sx={{ p: 4 }}>
       {/* Top bar */}
       <Box display="flex" justifyContent="space-between" mb={4} bgcolor="#f5f5f5" p={2} borderRadius={1}>
-        <PokemonStdButton>New Deck CICD</PokemonStdButton>
+        <PokemonStdButton>The Test</PokemonStdButton>
         {filterByPokemonName && (
           <PokemonStdButton onClick={() => setFilterByPokemonName(null)}>
             Clear Filter
