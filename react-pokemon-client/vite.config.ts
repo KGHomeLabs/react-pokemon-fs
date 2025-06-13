@@ -21,12 +21,11 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //this will be tied to the branch that yarn dev is ran from
     try {
       const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
-      if (branch === GitBranch.Production)
-        return AppEnv.Production;
-      if (branch === GitBranch.Preview)
-        return AppEnv.Preview;
-      return AppEnv.Development;
-
+      switch (branch) {
+        case GitBranch.Production: return AppEnv.Production;
+        case GitBranch.Preview:return AppEnv.Preview;
+        default:  return AppEnv.Development;
+      }
     } catch {
       //defaults to development
       //todo add a log entry to make sure this will be seen
@@ -34,7 +33,9 @@ const resolveAppEnv = (mode:string): AppEnv => {
     }
   } else {
     //in case we are not in vite development mode...
-    return process.env.VITE_APP_ENV as AppEnv;
+    //TODO: think about if defaulting to Dev is actually smart,
+    //      because if it fails on production prod might be a dev version then
+    return process.env.VITE_APP_ENV as AppEnv ?? AppEnv.Development; 
   }
 }
 
