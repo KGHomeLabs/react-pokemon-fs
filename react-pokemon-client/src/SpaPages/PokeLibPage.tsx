@@ -96,7 +96,7 @@ export default function PokeLibPage() {
     <Box sx={{ p: 4 }}>
       {/* Top bar */}
       <Box display="flex" justifyContent="space-between" mb={4} bgcolor="#f5f5f5" p={2} borderRadius={1}>
-        <PokemonStdButton>New Deck CICD</PokemonStdButton>
+        <PokemonStdButton>Cloudflare</PokemonStdButton>
         {filterByPokemonName && (
           <PokemonStdButton onClick={() => setFilterByPokemonName(null)}>
             Clear Filter
