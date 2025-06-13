@@ -1,85 +1,98 @@
 import { toast } from 'react-toastify';
-import { isDev, isPreview, isProd} from '../env';
+import { isDev, isPreview, isProd } from './env';
 
-export type LogLevel = 'info' | 'warn' | 'error';
+// Runtime-safe LogLevel like GitBranch
+export const LogLevel = {
+  Info: 'info',
+  Warn: 'warn',
+  Error: 'error',
+} as const;
+
+export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
+
+const getEnvironmentLabel = (): string => {
+  if (isDev()) return 'DEVELOPMENT';
+  if (isPreview()) return 'PREVIEW';
+  return 'PRODUCTION';
+};
 
 export const Logger = {
-  // Basic console logging with environment filtering
   log(level: LogLevel, message: string, ...args: unknown[]): void {
+    const envLabel = getEnvironmentLabel();
+    const formattedMessage = `[${envLabel}] [${level.toUpperCase()}] ${message}`;
+
     if (isDev() || isPreview()) {
-      // Show console logs in dev and preview environments
       switch (level) {
-        case 'info':
-          console.info(`[INFO] ${message}`, ...args);
+        case LogLevel.Info:
+          console.info(formattedMessage, ...args);
           break;
-        case 'warn':
-          console.warn(`[WARN] ${message}`, ...args);
+        case LogLevel.Warn:
+          console.warn(formattedMessage, ...args);
           break;
-        case 'error':
-          console.error(`[ERROR] ${message}`, ...args);
+        case LogLevel.Error:
+          console.error(formattedMessage, ...args);
           break;
       }
     }
-    // In production, only log errors to console
-    if (isProd() && level === 'error') {
-      console.error(`[ERROR] ${message}`, ...args);
+    if (isProd() && level === LogLevel.Error) {
+      console.error(formattedMessage, ...args);
     }
   },
 
-  // Toast notifications with environment-specific behavior
+  // WARNING: toast methods are browser-only (React context)
   toast(level: LogLevel, message: string): void {
+    if (typeof window === 'undefined') return; // Skip in Node.js (e.g., vite.config.js)
+
+    const envLabel = getEnvironmentLabel();
+    const formattedMessage = `[${envLabel}] ${message}`;
+
     if (isDev()) {
-      // In development, show all toasts
       switch (level) {
-        case 'info':
-          toast.info(message, { toastId: message });
+        case LogLevel.Info:
+          toast.info(formattedMessage, { toastId: message });
           break;
-        case 'warn':
-          toast.warn(message, { toastId: message });
+        case LogLevel.Warn:
+          toast.warn(formattedMessage, { toastId: message });
           break;
-        case 'error':
-          toast.error(message, { toastId: message });
+        case LogLevel.Error:
+          toast.error(formattedMessage, { toastId: message });
           break;
       }
     } else if (isPreview()) {
-      // In preview, show only warnings and errors
-      if (level === 'warn' || level === 'error') {
-        toast[level](message, { toastId: message });
+      if (level === LogLevel.Warn || level === LogLevel.Error) {
+        toast[level](formattedMessage, { toastId: message });
       }
     } else if (isProd()) {
-      // In production, show only errors
-      if (level === 'error') {
-        toast.error(message, { toastId: message });
+      if (level === LogLevel.Error) {
+        toast.error(formattedMessage, { toastId: message });
       }
     }
   },
 
-  // Shorthand methods for convenience
   info(message: string, ...args: unknown[]): void {
-    this.log('info', message, ...args);
-    this.toast('info', message);
+    this.log(LogLevel.Info, message, ...args);
+    this.toast(LogLevel.Info, message);
   },
 
   warn(message: string, ...args: unknown[]): void {
-    this.log('warn', message, ...args);
-    this.toast('warn', message);
+    this.log(LogLevel.Warn, message, ...args);
+    this.toast(LogLevel.Warn, message);
   },
 
   error(message: string, ...args: unknown[]): void {
-    this.log('error', message, ...args);
-    this.toast('error', message);
+    this.log(LogLevel.Error, message, ...args);
+    this.toast(LogLevel.Error, message);
   },
 
-  // Alias for toast-specific calls
   toastInfo(message: string): void {
-    this.toast('info', message);
+    this.toast(LogLevel.Info, message);
   },
 
   toastWarn(message: string): void {
-    this.toast('warn', message);
+    this.toast(LogLevel.Warn, message);
   },
 
   toastError(message: string): void {
-    this.toast('error', message);
+    this.toast(LogLevel.Error, message);
   },
 };
