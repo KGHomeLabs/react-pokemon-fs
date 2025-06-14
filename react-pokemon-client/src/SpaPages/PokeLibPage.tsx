@@ -10,10 +10,14 @@ import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokea
 import { Logger,LogLevel } from '../utils/logger'
 import type { IPokemon,IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
 import { isDev, isPreview, isProd } from '../utils/env';
+import { getAppEnv } from '../utils/env';
 
 const PAGE_SIZE = 20;
 
-export default function PokeLibPage() {
+export default function PokeLibPage() {  
+  const rawMetaEnv = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_APP_ENV !== undefined ? import.meta.env.VITE_APP_ENV : 'undefined';
+  const computedEnv = getAppEnv();
+
   // get the full IPokemon[] array, I think it came from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
@@ -102,7 +106,17 @@ export default function PokeLibPage() {
           <PokemonStdButton onClick={() => setFilterByPokemonName(null)}>
             Clear Filter
           </PokemonStdButton>
-        )}      
+        )} 
+          <PokemonStdButton
+              onClick={() => {
+                  alert(                    
+                    `Raw import.meta.env.VITE_APP_ENV: ${rawMetaEnv}\n` +
+                    `Computed Environment: ${computedEnv}`
+                  );  
+               }}
+          >
+            Show Environment
+          </PokemonStdButton>     
       </Box>
 
       {/* Sort + Search */}
