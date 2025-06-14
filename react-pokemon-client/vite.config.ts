@@ -1,15 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
-import { AppEnv } from './src/utils/env'
-
-export const GitBranch = {
-  Development: 'dev',
-  Preview: 'prev',
-  Production: 'master',
-} as const;
-
-export type GitBranch = (typeof GitBranch)[keyof typeof GitBranch];
+import { GitBranch } from './stagetypes'
+import { AppEnv } from './stagetypes'
 
 const resolveAppEnv = (mode:string): AppEnv => {
   console.info('Resolving Environment . . .');  //<-- on hosting environment this will show on the buildserver log
@@ -38,16 +31,16 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //      because if it fails on production prod might be a dev version then
       const env = process.env.VITE_APP_ENV as AppEnv;
       console.error(`VITE_APP_ENV is set to ${env}`);
-      if (env === AppEnv.Production || env === AppEnv.Preview) {
+      if (env === AppEnv.Production || env === AppEnv.Preview || env === AppEnv.Development) {
+        console.error(`Internal stage is being set to ${env}`);
         return env;
+      } else {
+        const defaultEnv=AppEnv.Development;
+        console.error(`VITE_APP_ENV not set or doesnt match an internal available stage, internal stage defaulting to ${defaultEnv}`); //<-- on hosting environment this will show on the buildserver log
+        return defaultEnv; // Safer default for non-dev builds
       }
-      const defaultEnv=AppEnv.Development;
-      console.error(`VITE_APP_ENV not set or invalid, defaulting to ${defaultEnv}`); //<-- on hosting environment this will show on the buildserver log
-      return defaultEnv; // Safer default for non-dev builds
   }
 }
-
-
 
 // https://vite.dev/config/
 export default defineConfig(({mode})=>{
