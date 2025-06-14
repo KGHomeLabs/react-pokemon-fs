@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { isDev, isPreview, isProd } from './env';
+import { isDev, isPreview, isProd } from '../../env-switch';
 
 // Runtime-safe LogLevel like GitBranch
 export const LogLevel = {

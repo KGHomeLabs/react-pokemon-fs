@@ -9,8 +9,8 @@ import { useFullPokemonList } from './Context/IPokemonContext';
 import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
 import { Logger,LogLevel } from '../utils/logger'
 import type { IPokemon,IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
-import { isDev, isPreview, isProd } from '../utils/env';
-import { getAppEnv } from '../utils/env';
+import { isDev, isPreview, isProd } from '../../env-switch';
+import { getAppEnv } from '../../env-switch';
 
 const PAGE_SIZE = 20;
 

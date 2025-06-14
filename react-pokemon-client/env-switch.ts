@@ -1,5 +1,5 @@
-import {AppEnv as AppEnvLit} from '../../stagetypes'
-import type {AppEnv} from '../../stagetypes'
+import {AppEnv as AppEnvLit} from './stagetypes'
+import type {AppEnv} from './stagetypes'
 
 function getEnvironmentName(): string | undefined {
     // Prioritize import.meta.env (available in browser and build)
