@@ -12,7 +12,7 @@ export const GitBranch = {
 export type GitBranch = (typeof GitBranch)[keyof typeof GitBranch];
 
 const resolveAppEnv = (mode:string): AppEnv => {
-  console.warn('Resolving Environment . . .');
+  console.info('Resolving Environment . . .');  //<-- on hosting environment this will show on the buildserver log
   if (mode === 'development') {
     //here I would like to do something special when project is launched
     //using `npm run dev` or `yarn dev`
@@ -20,6 +20,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //hosting environments like Vercel or Netlify, cloudflare etc.
     //this will be tied to the branch that yarn dev is ran from
     try {      
+      console.info('Fetching GIT branch . . .'); 
       const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();     
       switch (branch) {
         case GitBranch.Production: return AppEnv.Production;
@@ -27,7 +28,8 @@ const resolveAppEnv = (mode:string): AppEnv => {
         default:  return AppEnv.Development;
       }
     } catch (error) {
-      //defaults to development      
+      //defaults to development  
+      console.error("Error mapping Git repo branch");
       return AppEnv.Development;
     }
   } else {
@@ -35,11 +37,13 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //TODO: think about if defaulting to Dev is actually smart,
     //      because if it fails on production prod might be a dev version then
       const env = process.env.VITE_APP_ENV as AppEnv;
+      console.error(`VITE_APP_ENV is set to ${env}`);
       if (env === AppEnv.Production || env === AppEnv.Preview) {
         return env;
       }
-      console.error('VITE_APP_ENV not set or invalid, defaulting to development');
-      return AppEnv.Development; // Safer default for non-dev builds
+      const defaultEnv=AppEnv.Development;
+      console.error(`VITE_APP_ENV not set or invalid, defaulting to ${defaultEnv}`); //<-- on hosting environment this will show on the buildserver log
+      return defaultEnv; // Safer default for non-dev builds
   }
 }
 
