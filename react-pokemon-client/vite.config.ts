@@ -39,7 +39,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
         return env;
       }
       console.warn('VITE_APP_ENV not set or invalid, defaulting to production');
-      return AppEnv.Production; // Safer default for non-dev builds
+      return AppEnv.Development; // Safer default for non-dev builds
   }
 }
 
