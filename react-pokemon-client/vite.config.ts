@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
 import { AppEnv } from './src/utils/env'
-import { Logger, LogLevel } from './src/utils/logger'
 
 export const GitBranch = {
   Development: 'dev',
@@ -19,18 +18,15 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //ensuring that the environment switches also work when not on 
     //hosting environments like Vercel or Netlify, cloudflare etc.
     //this will be tied to the branch that yarn dev is ran from
-    try {
-      
-      const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
-      //Logger.log(LogLevel.Info, `Passed mode is ${mode}, analysing git branch`);
+    try {      
+      const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();     
       switch (branch) {
         case GitBranch.Production: return AppEnv.Production;
         case GitBranch.Preview:return AppEnv.Preview;
         default:  return AppEnv.Development;
       }
     } catch (error) {
-      //defaults to development
-      //Logger.log(LogLevel.Error, `Failed to detect Git branch, defaulting to development: ${error}`);
+      //defaults to development      
       return AppEnv.Development;
     }
   } else {
@@ -51,8 +47,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
 // https://vite.dev/config/
 export default defineConfig(({mode})=>{
   const currentAppEnv = resolveAppEnv(mode);
- // process.env.VITE_APP_ENV = currentAppEnv;
-  Logger.log(LogLevel.Info, process.env.VITE_APP_ENV ?? undefined);
+  process.env.VITE_APP_ENV = currentAppEnv;  
   return {
     plugins: [react()],
     define: {

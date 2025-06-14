@@ -8,7 +8,7 @@ export const AppEnv = {
 export type AppEnv = (typeof AppEnv)[keyof typeof AppEnv];
 
 function getEnvironmentName(): string | undefined {
-    return import.meta.env.VITE_APP_ENV;
+    return process.env.VITE_APP_ENV || (typeof import.meta.env !== 'undefined' ? import.meta.env.VITE_APP_ENV : undefined);
 }
 
 export function getAppEnv(): AppEnv{

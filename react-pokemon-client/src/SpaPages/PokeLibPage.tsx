@@ -108,12 +108,12 @@ export default function PokeLibPage() {
           </PokemonStdButton>
         )} 
           <PokemonStdButton
-        onClick={() => {
-          alert(`Raw VITE_APP_ENV: ${rawEnv}\nComputed Environment: ${computedEnv}`);
-        }}
-      >
-        Show Environment
-      </PokemonStdButton>     
+              onClick={() => {
+                  alert(`Raw VITE_APP_ENV: ${rawEnv === 'undefined' ? 'undefined' : rawEnv}\nComputed Environment: ${computedEnv}`);  
+               }}
+          >
+            Show Environment
+          </PokemonStdButton>     
       </Box>
 
       {/* Sort + Search */}
