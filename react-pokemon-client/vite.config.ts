@@ -38,7 +38,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
       if (env === AppEnv.Production || env === AppEnv.Preview) {
         return env;
       }
-      console.warn('VITE_APP_ENV not set or invalid, defaulting to production');
+      console.error('VITE_APP_ENV not set or invalid, defaulting to development');
       return AppEnv.Development; // Safer default for non-dev builds
   }
 }

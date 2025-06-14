@@ -15,8 +15,9 @@ import { getAppEnv } from '../utils/env';
 const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
-  const rawEnv = import.meta.env.VITE_APP_ENV || 'undefined'; // Raw VITE_APP_ENV
-  const computedEnv = getAppEnv(); // Computed via getAppEnv
+  const rawProcessEnv = typeof process.env !== 'undefined' && process.env.VITE_APP_ENV !== undefined ? process.env.VITE_APP_ENV : 'undefined';
+  const rawMetaEnv = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_APP_ENV !== undefined ? import.meta.env.VITE_APP_ENV : 'undefined';
+  const computedEnv = getAppEnv();
 
   // get the full IPokemon[] array, I think it came from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
@@ -109,7 +110,11 @@ export default function PokeLibPage() {
         )} 
           <PokemonStdButton
               onClick={() => {
-                  alert(`Raw VITE_APP_ENV: ${rawEnv === 'undefined' ? 'undefined' : rawEnv}\nComputed Environment: ${computedEnv}`);  
+                  alert(
+                    `Raw process.env.VITE_APP_ENV: ${rawProcessEnv}\n` +
+                    `Raw import.meta.env.VITE_APP_ENV: ${rawMetaEnv}\n` +
+                    `Computed Environment: ${computedEnv}`
+                  );  
                }}
           >
             Show Environment
