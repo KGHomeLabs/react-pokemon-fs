@@ -52,6 +52,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
 export default defineConfig(({mode})=>{
   const currentAppEnv = resolveAppEnv(mode);
  // process.env.VITE_APP_ENV = currentAppEnv;
+  Logger.log(LogLevel.Info, process.env.VITE_APP_ENV ?? undefined);
   return {
     plugins: [react()],
     define: {
