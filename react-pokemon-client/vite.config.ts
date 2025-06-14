@@ -1,36 +1,28 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
-import { AppEnv } from './src/utils/env'
-import { Logger, LogLevel } from './src/utils/logger'
-
-export const GitBranch = {
-  Development: 'dev',
-  Preview: 'prev',
-  Production: 'master',
-} as const;
-
-export type GitBranch = (typeof GitBranch)[keyof typeof GitBranch];
+import { GitBranch } from './stagetypes'
+import { AppEnv } from './stagetypes'
 
 const resolveAppEnv = (mode:string): AppEnv => {
+  console.info('Resolving Environment . . .');  //<-- on hosting environment this will show on the buildserver log
   if (mode === 'development') {
     //here I would like to do something special when project is launched
     //using `npm run dev` or `yarn dev`
     //ensuring that the environment switches also work when not on 
     //hosting environments like Vercel or Netlify, cloudflare etc.
     //this will be tied to the branch that yarn dev is ran from
-    try {
-      
-      const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
-      //Logger.log(LogLevel.Info, `Passed mode is ${mode}, analysing git branch`);
+    try {      
+      console.info('Fetching GIT branch . . .'); 
+      const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();     
       switch (branch) {
         case GitBranch.Production: return AppEnv.Production;
         case GitBranch.Preview:return AppEnv.Preview;
         default:  return AppEnv.Development;
       }
     } catch (error) {
-      //defaults to development
-      //Logger.log(LogLevel.Error, `Failed to detect Git branch, defaulting to development: ${error}`);
+      //defaults to development  
+      console.error("Error mapping Git repo branch");
       return AppEnv.Development;
     }
   } else {
@@ -38,20 +30,21 @@ const resolveAppEnv = (mode:string): AppEnv => {
     //TODO: think about if defaulting to Dev is actually smart,
     //      because if it fails on production prod might be a dev version then
       const env = process.env.VITE_APP_ENV as AppEnv;
-      if (env === AppEnv.Production || env === AppEnv.Preview) {
+      console.error(`VITE_APP_ENV is set to ${env}`);
+      if (env === AppEnv.Production || env === AppEnv.Preview || env === AppEnv.Development) {
+        console.error(`Internal stage is being set to ${env}`);
         return env;
+      } else {
+        const defaultEnv=AppEnv.Development;
+        console.error(`VITE_APP_ENV not set or doesnt match an internal available stage, internal stage defaulting to ${defaultEnv}`); //<-- on hosting environment this will show on the buildserver log
+        return defaultEnv; // Safer default for non-dev builds
       }
-      //Logger.log(LogLevel.Warn, 'VITE_APP_ENV not set or invalid, defaulting to production');
-      return AppEnv.Production; // Safer default for non-dev builds
   }
 }
 
-
-
 // https://vite.dev/config/
 export default defineConfig(({mode})=>{
-  const currentAppEnv = resolveAppEnv(mode);
- // process.env.VITE_APP_ENV = currentAppEnv;
+  const currentAppEnv = resolveAppEnv(mode); 
   return {
     plugins: [react()],
     define: {
