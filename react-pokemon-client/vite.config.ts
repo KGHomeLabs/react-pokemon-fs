@@ -12,6 +12,7 @@ export const GitBranch = {
 export type GitBranch = (typeof GitBranch)[keyof typeof GitBranch];
 
 const resolveAppEnv = (mode:string): AppEnv => {
+  console.warn('Resolving Environment . . .');
   if (mode === 'development') {
     //here I would like to do something special when project is launched
     //using `npm run dev` or `yarn dev`
@@ -37,7 +38,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
       if (env === AppEnv.Production || env === AppEnv.Preview) {
         return env;
       }
-      //Logger.log(LogLevel.Warn, 'VITE_APP_ENV not set or invalid, defaulting to production');
+      console.warn('VITE_APP_ENV not set or invalid, defaulting to production');
       return AppEnv.Production; // Safer default for non-dev builds
   }
 }
@@ -46,8 +47,7 @@ const resolveAppEnv = (mode:string): AppEnv => {
 
 // https://vite.dev/config/
 export default defineConfig(({mode})=>{
-  const currentAppEnv = resolveAppEnv(mode);
-  process.env.VITE_APP_ENV = currentAppEnv;  
+  const currentAppEnv = resolveAppEnv(mode); 
   return {
     plugins: [react()],
     define: {
