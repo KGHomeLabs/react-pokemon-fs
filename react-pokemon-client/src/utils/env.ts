@@ -2,7 +2,15 @@ import {AppEnv as AppEnvLit} from '../../stagetypes'
 import type {AppEnv} from '../../stagetypes'
 
 function getEnvironmentName(): string | undefined {
-    return process.env.VITE_APP_ENV || (typeof import.meta.env !== 'undefined' ? import.meta.env.VITE_APP_ENV : undefined);
+    // Prioritize import.meta.env (available in browser and build)
+    if (typeof import.meta.env !== 'undefined' && import.meta.env.VITE_APP_ENV !== undefined) {
+        return import.meta.env.VITE_APP_ENV;
+    }
+    // Fallback to process.env only if in Node.js context (e.g., during SSR or build tools)
+    if (typeof process !== 'undefined' && process.env.VITE_APP_ENV !== undefined) {
+        return process.env.VITE_APP_ENV;
+    }
+    return undefined; // Safe default if neither is available
 }
 
 export function getAppEnv(): AppEnv{
