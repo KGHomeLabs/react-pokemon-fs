@@ -14,8 +14,7 @@ import { getAppEnv } from '../utils/env';
 
 const PAGE_SIZE = 20;
 
-export default function PokeLibPage() {
-  const rawProcessEnv = typeof process.env !== 'undefined' && process.env.VITE_APP_ENV !== undefined ? process.env.VITE_APP_ENV : 'undefined';
+export default function PokeLibPage() {  
   const rawMetaEnv = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_APP_ENV !== undefined ? import.meta.env.VITE_APP_ENV : 'undefined';
   const computedEnv = getAppEnv();
 
@@ -110,8 +109,7 @@ export default function PokeLibPage() {
         )} 
           <PokemonStdButton
               onClick={() => {
-                  alert(
-                    `Raw process.env.VITE_APP_ENV: ${rawProcessEnv}\n` +
+                  alert(                    
                     `Raw import.meta.env.VITE_APP_ENV: ${rawMetaEnv}\n` +
                     `Computed Environment: ${computedEnv}`
                   );  
