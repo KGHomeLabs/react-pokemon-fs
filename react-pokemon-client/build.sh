@@ -1,3 +1,4 @@
+#cd .. || exit 1  # Move to project root if run from build/
 echo "Current branch: $CF_PAGES_BRANCH"
 
 case "$CF_PAGES_BRANCH" in
