@@ -87,7 +87,7 @@ export default function PokeLibPage() {
   useEffect(() => {
     setPage(1);
   }, [debounced, filterByPokemonName]);
-  Logger.log(LogLevel.Info, `Envs:dev ${isDev()} or prev ${isPreview()} or prod ${isProd()}}`)
+
   if (isLoading) return <Typography>Loading Pokémon list…</Typography>;
   if (error) return <Typography color="error">Error loading list</Typography>;
   if (filterByPokemonName && (speciesQuery.error || evolutionQuery.error)) {
