@@ -16,9 +16,8 @@ import { isDev, isPreview, isProd, getAppEnv } from '../../config/env-switch';
 const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
-  const rawMetaEnv = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_APP_ENV !== undefined ? import.meta.env.VITE_APP_ENV : 'undefined';
   const computedEnv = getAppEnv();
-  Logger.log(LogLevel.Error, rawMetaEnv);
+
   // get the full IPokemon[] array, I think it camye from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
