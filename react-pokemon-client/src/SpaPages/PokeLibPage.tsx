@@ -7,9 +7,8 @@ import Footer from './Components/Footer';
 import useDebounce from './CustomHooks/useDebounce';
 import { useFullPokemonList } from './Context/IPokemonContext';
 import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
-import { Logger, LogLevel } from '../utils/logger'
 import type { IPokemon, IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
-import { isDev, isPreview, isProd, getAppEnv } from '../../config/env-switch';
+import { isDev, isPreview, getAppEnv } from '../../config/env-switch';
 
 //import {type ImportMeta} from '../../config/vite-env'
 
