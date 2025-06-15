@@ -1,10 +1,9 @@
-{ 
+{
   "name": "react-pokemon-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    
     "dev": "vite --config build/vite.config.ts",
     "devEnv": "vite --config build/vite.config.ts --mode devEnv",
     "prevEnv": "vite --config build/vite.config.ts --mode prevEnv",
@@ -13,7 +12,7 @@
     "prevBuild": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts --mode prevEnvBuild && vite preview --config build/vite.config.ts --mode prevEnvBuild",
     "prodBuild": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts --mode prodEnvBuild && vite preview --config build/vite.config.ts --mode prodEnvBuild",
     "build": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts",
-    "lint": "eslint ."  
+    "lint": "eslint ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -21,6 +20,7 @@
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.0",
     "@tanstack/react-query": "^5.80.5",
+    "@tanstack/react-query-devtools": "^5.80.7",
     "axios": "^1.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

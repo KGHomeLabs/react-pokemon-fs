@@ -1116,6 +1116,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-devtools@npm:5.80.0":
+  version: 5.80.0
+  resolution: "@tanstack/query-devtools@npm:5.80.0"
+  checksum: 10c0/2210bd390a769f1cfaf0343e66c7ec9c0a8fca982fa7853428c3c7f7da438c3380b841e8e065603f4e8449d52237a80d4877fc5299995e76e18bd44d5143acfc
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.80.7":
+  version: 5.80.7
+  resolution: "@tanstack/react-query-devtools@npm:5.80.7"
+  dependencies:
+    "@tanstack/query-devtools": "npm:5.80.0"
+  peerDependencies:
+    "@tanstack/react-query": ^5.80.7
+    react: ^18 || ^19
+  checksum: 10c0/79f60f3961c8e1563d99ee94b58dbffb8e170ba6ec36f59046f1de9a054463cd7cc017fb35bd579be624b9d3c54b18f381d078c0e73261569e9ac9430532bc93
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query@npm:^5.80.5":
   version: 5.80.7
   resolution: "@tanstack/react-query@npm:5.80.7"
@@ -3161,6 +3180,7 @@ __metadata:
     "@mui/icons-material": "npm:^7.1.1"
     "@mui/material": "npm:^7.1.0"
     "@tanstack/react-query": "npm:^5.80.5"
+    "@tanstack/react-query-devtools": "npm:^5.80.7"
     "@types/node": "npm:^24.0.1"
     "@types/react": "npm:^19.1.2"
     "@types/react-dom": "npm:^19.1.2"
