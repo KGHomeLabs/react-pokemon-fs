@@ -5,14 +5,14 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+tree.txt
 # OSss
 .DS_Store
 Thumbs.db
 
 # Build output
 dist/
-build/
+# build/ ## in this project build contains build related sceripts
 
 
 designs/targets.txt
