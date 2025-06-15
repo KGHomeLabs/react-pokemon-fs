@@ -9,8 +9,8 @@ import { useFullPokemonList } from './Context/IPokemonContext';
 import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
 import { Logger,LogLevel } from '../utils/logger'
 import type { IPokemon,IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
-import { isDev, isPreview, isProd } from '../../env-switch';
-import { getAppEnv } from '../../env-switch';
+import { isDev, isPreview, isProd,getAppEnv } from '../../config/env-switch';
+
 
 const PAGE_SIZE = 20;
 
@@ -18,7 +18,7 @@ export default function PokeLibPage() {
   const rawMetaEnv = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_APP_ENV !== undefined ? import.meta.env.VITE_APP_ENV : 'undefined';
   const computedEnv = getAppEnv();
 
-  // get the full IPokemon[] array, I think it came from the context
+  // get the full IPokemon[] array, I think it camye from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
   const [search, setSearch] = useState('');

@@ -1,13 +1,19 @@
-{
+{ 
   "name": "react-pokemon-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    
+    "dev": "vite --config build/vite.config.ts",
+    "devEnv": "vite --config build/vite.config.ts --mode devEnv",
+    "prevEnv": "vite --config build/vite.config.ts --mode prevEnv",
+    "prodEnv": "vite --config build/vite.config.ts --mode prodEnv",
+    "devBuild": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts --mode devEnvBuild && vite preview --config build/vite.config.ts --mode devEnvBuild",
+    "prevBuild": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts --mode prevEnvBuild && vite preview --config build/vite.config.ts --mode prevEnvBuild",
+    "prodBuild": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts --mode prodEnvBuild && vite preview --config build/vite.config.ts --mode prodEnvBuild",
+    "build": "tsc -b config/tsconfig.json && vite build --config build/vite.config.ts",
+    "lint": "eslint ."  
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
