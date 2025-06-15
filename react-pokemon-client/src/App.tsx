@@ -4,8 +4,8 @@ import MyDeckPage from './SpaPages/PokeLibPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PokemonContextProvider } from './SpaPages/Context/IPokemonContext';
 import { ToastContainer } from 'react-toastify';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'; // Add this
-import { isDev } from '../config/env-switch'; // Add this
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { isDev } from '../config/env-switch';
 import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient({
@@ -17,7 +17,7 @@ const App = () => (
     <PokemonContextProvider>
       <MyDeckPage />
       <ToastContainer
-        aria-label="toast notifications" 
+        aria-label="toast notifications"
         position="top-left"
         autoClose={5000}
         hideProgressBar={false}
@@ -26,10 +26,10 @@ const App = () => (
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover/>
+        pauseOnHover />
     </PokemonContextProvider>
     {/*/works best next to query provider as direct child */}
-    {isDev() && <ReactQueryDevtools initialIsOpen={true} />}  
+    {isDev() && <ReactQueryDevtools initialIsOpen={true} />}
   </QueryClientProvider>
 );
 
