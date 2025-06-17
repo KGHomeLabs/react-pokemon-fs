@@ -15,33 +15,52 @@ jobs:
           steps:
                - name: Checkout repo
                  uses: actions/checkout@v4
+                 with:
+                      fetch-depth: 0 # Fetch all history for git log
 
                - name: Fetch commit messages
                  id: collect_commits
                  run: |
                       echo "Collecting commit messages..."
-                      commits=$(gh pr view ${{ github.event.pull_request.number }} --json commits -q '.commits[].message' | tr '\n' ' ')
+                      # Get base and head SHAs of the PR
+                      base_sha=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefOid -q '.baseRefOid')
+                      head_sha=$(gh pr view ${{ github.event.pull_request.number }} --json headRefOid -q '.headRefOid')
+                      echo "Base SHA: $base_sha"
+                      echo "Head SHA: $head_sha"
+                      # Fetch commit messages between base and head, one per line
+                      commits=$(git log --pretty=%B $base_sha..$head_sha)
+                      echo "Raw commit messages:"
+                      echo "$commits"
                       echo "commit_messages<<EOF" >> $GITHUB_OUTPUT
                       echo "$commits" >> $GITHUB_OUTPUT
                       echo "EOF" >> $GITHUB_OUTPUT
                  env:
                       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+               - name: Debug commit messages
+                 run: |
+                      echo "Commit messages received:"
+                      echo "${{ steps.collect_commits.outputs.commit_messages }}"
+
                - name: Generate section for PR body
                  id: generate_body
                  run: |
                       header="These are the aggregated commits since last PR (auto-generated)"
                       body="### $header\n"
-                      issues=$(echo "${{ steps.collect_commits.outputs.commit_messages }}" | grep -Eo '#[0-9]+|\(#[0-9]+\)' | sed 's/[()]//g' | sort | uniq)
-                      if [[ -z "$issues" ]]; then
-                        echo "No issue references found. Skipping update."
+                      # Read commit messages line by line
+                      echo "${{ steps.collect_commits.outputs.commit_messages }}" | while IFS= read -r commit; do
+                        if [[ -z "$commit" ]]; then
+                          continue
+                        fi
+                        # Replace #42 or (#42) with link
+                        modified_commit=$(echo "$commit" | sed -E 's|(#|\(#[0-9]+)\)|\[\1\](https://github.com/${{ github.repository }}/issues/\2)|g' | sed -E 's|\(#([0-9]+)\)|\[\1\](https://github.com/${{ github.repository }}/issues/\2)|g')
+                        body+="✅ $modified_commit\n"
+                      done
+                      if [[ "$body" == "### $header\n" ]]; then
+                        echo "No commit messages found. Skipping update."
                         echo "skip=true" >> $GITHUB_OUTPUT
                         exit 0
                       fi
-                      for issue in $issues; do
-                        number="${issue//#/}"
-                        body+="✅ [$issue](https://github.com/${{ github.repository }}/issues/$number)\n"
-                      done
                       echo "generated<<EOF" >> $GITHUB_OUTPUT
                       echo -e "$body" >> $GITHUB_OUTPUT
                       echo "EOF" >> $GITHUB_OUTPUT
