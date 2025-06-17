@@ -52,8 +52,10 @@ jobs:
                         if [[ -z "$commit" ]]; then
                           continue
                         fi
-                        # Replace #42 or (#42) with link
-                        modified_commit=$(echo "$commit" | sed -E 's|(#|\(#[0-9]+)\)|\[\1\](https://github.com/${{ github.repository }}/issues/\2)|g' | sed -E 's|\(#([0-9]+)\)|\[\1\](https://github.com/${{ github.repository }}/issues/\2)|g')
+                        # Replace (#<number>) with [#<number>](link)
+                        modified_commit=$(echo "$commit" | sed -E 's|\(#[0-9]+\)|\[\1\](https://github.com/${{ github.repository }}/issues/\1)|g' | sed -E 's|\(#([0-9]+)\)|#\1|g')
+                        # Replace #<number> with [#<number>](link)
+                        modified_commit=$(echo "$modified_commit" | sed -E 's|#[0-9]+|\[\0\](https://github.com/${{ github.repository }}/issues/\0)|g' | sed -E 's|\[#([0-9]+)\]|\1|g')
                         body+="✅ $modified_commit\n"
                       done
                       if [[ "$body" == "### $header\n" ]]; then
