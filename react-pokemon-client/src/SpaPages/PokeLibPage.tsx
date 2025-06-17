@@ -16,7 +16,7 @@ const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
   const computedEnv = getAppEnv();
-
+  //super minor change for test<< remove comment again
   // get the full IPokemon[] array, I think it camye from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
