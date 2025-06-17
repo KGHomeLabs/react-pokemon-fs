@@ -1,15 +1,61 @@
+name: PR Description Aggregator
+
 on:
      pull_request:
           types: [opened, synchronize, reopened]
-          branches:
-               - main # or whatever your target is
+
+permissions:
+     issues: write
+     pull-requests: write
 
 jobs:
-     update-pr:
-          if: github.event.pull_request.head.repo.full_name == github.repository
+     update-pr-body:
           runs-on: ubuntu-latest
+
           steps:
-               - uses: actions/github-script@v6
-                 with:
-                      script: |
-                           // safe to use GITHUB_TOKEN
+               - name: Checkout repo
+                 uses: actions/checkout@v4
+
+               - name: Fetch commit messages
+                 id: collect_commits
+                 run: |
+                      echo "Collecting commit messages..."
+                      commits=$(gh pr view ${{ github.event.pull_request.number }} --json commits -q '.commits[].message')
+                      echo "commit_messages<<EOF" >> $GITHUB_OUTPUT
+                      echo "$commits" >> $GITHUB_OUTPUT
+                      echo "EOF" >> $GITHUB_OUTPUT
+                 env:
+                      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+               - name: Generate section for PR body
+                 id: generate_body
+                 run: |
+                      header="These are the aggregated commits since last PR (auto-generated)"
+                      body="### $header\n"
+                      issues=$(echo "${{ steps.collect_commits.outputs.commit_messages }}" | grep -Eo '#[0-9]+' | sort | uniq)
+
+                      if [[ -z "$issues" ]]; then
+                        echo "No issue references found. Skipping update."
+                        echo "skip=true" >> $GITHUB_OUTPUT
+                        exit 0
+                      fi
+
+                      for issue in $issues; do
+                        number="${issue//#/}"
+                        body+="✅ [${issue}](https://github.com/${{ github.repository }}/issues/${number})\n"
+                      done
+
+                      echo "generated<<EOF" >> $GITHUB_OUTPUT
+                      echo -e "$body" >> $GITHUB_OUTPUT
+                      echo "EOF" >> $GITHUB_OUTPUT
+                 env:
+                      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+               - name: Replace PR description
+                 if: steps.generate_body.outputs.skip != 'true'
+                 run: |
+                      gh pr edit ${{ github.event.pull_request.number }} \
+                        --repo "${{ github.repository }}" \
+                        --body "${{ steps.generate_body.outputs.generated }}"
+                 env:
+                      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
