@@ -1,4 +1,4 @@
-name: PR Description Aggregator
+name: Update PR with Issue Numbers
 
 on:
      pull_request:
@@ -9,39 +9,26 @@ permissions:
      pull-requests: write
 
 jobs:
-     update-pr-body:
+     update-pr:
           runs-on: ubuntu-latest
-
           steps:
-               - name: Checkout repo
-                 uses: actions/checkout@v4
+               - uses: actions/checkout@v4
                  with:
                       ref: ${{ github.event.pull_request.head.ref }} # Checkout the PR's head branch
                       fetch-depth: 0 # Fetch all history
 
-               - name: Fetch commit messages
-                 id: collect_commits
+               - name: Fetch and process commit messages
+                 id: process_commits
                  run: |
                       echo "Collecting commit messages..."
-                      base_sha=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefOid -q '.baseRefOid')
-                      head_sha=$(gh pr view ${{ github.event.pull_request.number }} --json headRefOid -q '.headRefOid')
-                      echo "Base SHA: $base_sha"
-                      echo "Head SHA: $head_sha"
-                      commits=$(git log --pretty=%B $base_sha..$head_sha)
+                      base_ref=${{ github.event.pull_request.base.ref }}
+                      head_ref=${{ github.event.pull_request.head.ref }}
+                      git fetch origin $base_ref $head_ref
+                      commits=$(git log --pretty=%B origin/$base_ref..origin/$head_ref)
                       echo "Raw commit messages:"
                       echo "$commits"
-                      echo "commit_messages<<EOF" >> $GITHUB_OUTPUT
-                      echo "$commits" >> $GITHUB_OUTPUT
-                      echo "EOF" >> $GITHUB_OUTPUT
-                 env:
-                      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-               - name: Generate section for PR body
-                 id: generate_body
-                 run: |
-                      header="These are the aggregated commits since last PR (auto-generated)"
-                      body="### $header\n"
-                      echo "${{ steps.collect_commits.outputs.commit_messages }}" | while IFS= read -r commit; do
+                      body=""
+                      echo "$commits" | while IFS= read -r commit; do
                         if [[ -z "$commit" ]]; then
                           continue
                         fi
@@ -51,22 +38,28 @@ jobs:
                         modified_commit=$(echo "$modified_commit" | sed -E 's|#[0-9]+|\[#\0\](https://github.com/${{ github.repository }}/issues/\0)|g')
                         body+="✅ $modified_commit\n"
                       done
-                      if [[ "$body" == "### $header\n" ]]; then
+                      if [[ -z "$body" ]]; then
                         echo "No commit messages found. Skipping update."
                         echo "skip=true" >> $GITHUB_OUTPUT
                         exit 0
                       fi
-                      echo "generated<<EOF" >> $GITHUB_OUTPUT
-                      echo -e "$body" >> $GITHUB_OUTPUT
+                      echo "generated_body<<EOF" >> $GITHUB_OUTPUT
+                      echo -e "### These are the aggregated commits since last PR (auto-generated)\n$body" >> $GITHUB_OUTPUT
                       echo "EOF" >> $GITHUB_OUTPUT
                  env:
                       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-               - name: Replace PR description
-                 if: steps.generate_body.outputs.skip != 'true'
-                 run: |
-                      gh pr edit ${{ github.event.pull_request.number }} \
-                        --repo "${{ github.repository }}" \
-                        --body "${{ steps.collect_commits.outputs.commit_messages }}"
-                 env:
-                      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+               - name: Update PR Description
+                 if: steps.process_commits.outputs.skip != 'true'
+                 uses: actions/github-script@v6
+                 with:
+                      github-token: ${{ secrets.GITHUB_TOKEN }}
+                      script: |
+                           const pr = context.payload.pull_request
+                           const body = `${{ steps.process_commits.outputs.generated_body }}`
+                           await github.rest.issues.update({
+                             owner: context.repo.owner,
+                             repo: context.repo.repo,
+                             issue_number: pr.number,
+                             body: body
+                           })
