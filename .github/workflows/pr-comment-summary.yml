@@ -28,7 +28,7 @@ jobs:
                       body="These are the aggregated commits since last PR (auto-generated)\n"
                       echo "${{ steps.get_commits.outputs.commit_messages }}" | grep -Eo '#[0-9]+' | sort | uniq | while read issue; do
                         issue_number=$(echo "$issue" | tr -d '#')
-                        body+="✅ [${issue}](https://github.com/${{ github.repository }}/issues/${issue_number})\n"
+                        body+="✓ [${issue}](https://github.com/${{ github.repository }}/issues/${issue_number})\n"
                       done
                       echo "body<<EOF" >> $GITHUB_OUTPUT
                       echo -e "$body" >> $GITHUB_OUTPUT
