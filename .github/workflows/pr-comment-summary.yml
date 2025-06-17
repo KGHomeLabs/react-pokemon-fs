@@ -32,7 +32,7 @@ jobs:
                  run: |
                       header="These are the aggregated commits since last PR (auto-generated)"
                       body="### $header\n"
-                      issues=$(echo "${{ steps.collect_commits.outputs.commit_messages }}" | grep -Eo '#[0-9]+' | sort | uniq)
+                      issues=$(echo "${{ steps.collect_commits.outputs.commit_messages }}" | grep -Eo '(#)[0-9]+' | sort | uniq)
 
                       if [[ -z "$issues" ]]; then
                         echo "No issue references found. Skipping update."
