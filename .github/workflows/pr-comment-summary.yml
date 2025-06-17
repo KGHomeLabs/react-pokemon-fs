@@ -1,0 +1,15 @@
+on:
+     pull_request:
+          types: [opened, synchronize, reopened]
+          branches:
+               - main # or whatever your target is
+
+jobs:
+     update-pr:
+          if: github.event.pull_request.head.repo.full_name == github.repository
+          runs-on: ubuntu-latest
+          steps:
+               - uses: actions/github-script@v6
+                 with:
+                      script: |
+                           // safe to use GITHUB_TOKEN
