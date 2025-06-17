@@ -16,18 +16,17 @@ jobs:
                - name: Checkout repo
                  uses: actions/checkout@v4
                  with:
-                      fetch-depth: 0 # Fetch all history for git log
+                      ref: ${{ github.event.pull_request.head.ref }} # Checkout the PR's head branch
+                      fetch-depth: 0 # Fetch all history
 
                - name: Fetch commit messages
                  id: collect_commits
                  run: |
                       echo "Collecting commit messages..."
-                      # Get base and head SHAs of the PR
                       base_sha=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefOid -q '.baseRefOid')
                       head_sha=$(gh pr view ${{ github.event.pull_request.number }} --json headRefOid -q '.headRefOid')
                       echo "Base SHA: $base_sha"
                       echo "Head SHA: $head_sha"
-                      # Fetch commit messages between base and head, one per line
                       commits=$(git log --pretty=%B $base_sha..$head_sha)
                       echo "Raw commit messages:"
                       echo "$commits"
@@ -37,25 +36,19 @@ jobs:
                  env:
                       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-               - name: Debug commit messages
-                 run: |
-                      echo "Commit messages received:"
-                      echo "${{ steps.collect_commits.outputs.commit_messages }}"
-
                - name: Generate section for PR body
                  id: generate_body
                  run: |
                       header="These are the aggregated commits since last PR (auto-generated)"
                       body="### $header\n"
-                      # Read commit messages line by line
                       echo "${{ steps.collect_commits.outputs.commit_messages }}" | while IFS= read -r commit; do
                         if [[ -z "$commit" ]]; then
                           continue
                         fi
                         # Replace (#<number>) with [#<number>](link)
-                        modified_commit=$(echo "$commit" | sed -E 's|\(#[0-9]+\)|\[\1\](https://github.com/${{ github.repository }}/issues/\1)|g' | sed -E 's|\(#([0-9]+)\)|#\1|g')
+                        modified_commit=$(echo "$commit" | sed -E 's|\(#[0-9]+\)|\[#\0\](https://github.com/${{ github.repository }}/issues/\0)|g' | sed -E 's|\(#([0-9]+)\)|#\1|g')
                         # Replace #<number> with [#<number>](link)
-                        modified_commit=$(echo "$modified_commit" | sed -E 's|#[0-9]+|\[\0\](https://github.com/${{ github.repository }}/issues/\0)|g' | sed -E 's|\[#([0-9]+)\]|\1|g')
+                        modified_commit=$(echo "$modified_commit" | sed -E 's|#[0-9]+|\[#\0\](https://github.com/${{ github.repository }}/issues/\0)|g')
                         body+="✅ $modified_commit\n"
                       done
                       if [[ "$body" == "### $header\n" ]]; then
@@ -74,6 +67,6 @@ jobs:
                  run: |
                       gh pr edit ${{ github.event.pull_request.number }} \
                         --repo "${{ github.repository }}" \
-                        --body "${{ steps.generate_body.outputs.generated }}"
+                        --body "${{ steps.collect_commits.outputs.commit_messages }}"
                  env:
                       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
