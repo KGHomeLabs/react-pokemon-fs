@@ -1,8 +1,10 @@
-{/* This is a sub config of tsconfig.json used by tsc to compile node.js specifics*/
+{ /* This is a sub config of tsconfig.json used by tsc to compile node.js specifics*/
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": [
+      "ES2023"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -11,14 +13,20 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "types": ["node"],  // Added for Node.js support in vite.config.ts
+    "types": [
+      "node"
+    ], // Added for Node.js support in vite.config.ts
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "isolatedModules": true,  // Corrected from "erasableSyntaxOnly"
+    "isolatedModules": true, // Corrected from "erasableSyntaxOnly"
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["../build/vite.config.ts", "./vite-env.d.tss"]  // Updated for new structure
+  "include": [
+    "../build/vite.config.ts",
+    "./vite-env.d.tss",
+    "./css.d.ts"
+  ] // Updated for new structure
 }
