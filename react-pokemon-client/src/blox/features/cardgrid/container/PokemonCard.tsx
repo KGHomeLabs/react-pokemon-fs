@@ -1,25 +1,24 @@
 import { useState } from 'react';
-import { Card, CardMedia, CardContent, Typography, Box, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/AddCircleOutline';
-import FilterIcon from '@mui/icons-material/FilterAltOutlined';
+import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 
 //outer Interface 
 import type { IPokemonCardProps } from './i-pokemon-card-props';
 
 //Owned by this Feature
-import { getRibbonColor } from './poke-type2color';
-import cardStyles from './CardLayout.module.css';
+import { getRibbonColor } from './utils/poke-type2color';
+import cardStyles from '../CardLayout.module.css';
 
 ///IN: Services, Context, Components
-import { usePokemonByIdOrNameQuery } from '../../services/pokeapi.co.query/pokemon-query-hooks';
-import type { IPokemon } from '../../services/pokeapi.co.query/i-pokemon-query'
+import { usePokemonByIdOrNameQuery } from '../../../services/pokeapi.co.query/pokemon-query-hooks';
+import type { IPokemon } from '../../../services/pokeapi.co.query/i-pokemon-query'
 
 //Sets a method
-import { useFullPokemonList } from '../../Context/IPokemonContext';
-import CardIsLoading from './container/cardisloading';
+import { useFullPokemonList } from '../../../Context/IPokemonContext';
+import CardIsLoading from './Components/CardIsLoading';
+import FunctionRibbon from './Components/FunctionRibbon';
 
 
-export default function PokemonCard({ name, sx }: IPokemonCardProps) {
+export default function PokemonCard({ name }: IPokemonCardProps) {
   const query = usePokemonByIdOrNameQuery(name);
   const { setFilterByPokemonName } = useFullPokemonList();
   const data: IPokemon | undefined = query.data;
@@ -41,49 +40,14 @@ export default function PokemonCard({ name, sx }: IPokemonCardProps) {
 
   return (
     <Box key={name} className={cardStyles.cardContainer} >
-      <Card className={cardStyles.cardTopLevelLayout} sx={sx}
+      <Card className={cardStyles.cardTopLevelLayout}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         {/* Top Ribbon at the top of the card, it shows a color for the type*/}
-        <Box sx={{ height: '15px', backgroundColor: ribbonColor, m: 0, p: 0 }} />
-
-        {/*Function buttons in the card*/}
-        {/* TODO: I dont like all the design stuff in here
-            Function area: shown inline, no absolute positioning */}
-        <Box
-          sx={{
-            height: hovered ? 32 : 0, // Fixed height instead of auto
-            overflow: 'hidden',
-            transition: 'height 0.2s ease',
-          }}
-        >
-          {hovered && (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                px: 1,
-                py: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                gap: 0.5,
-                height: 32,
-              }}
-            >
-              <IconButton
-                size="small"
-                sx={{ p: '4px' }}
-                title="Filter by Series"
-                onClick={() => setFilterByPokemonName(name)}
-              >
-                <FilterIcon fontSize="small" />
-              </IconButton>
-              <IconButton size="small" sx={{ p: '4px' }} title="Add to Deck">
-                <AddIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          )}
-        </Box> {/*end of function area*/}
+        <Box className={cardStyles.ribbon} sx={{ backgroundColor: ribbonColor }} />
+        {/* Little card speciffic function area to appear e.g. on hover for card speciffic functions*/}
+        <FunctionRibbon name={name} hovered={hovered} filterCallback={setFilterByPokemonName}></FunctionRibbon>
 
         {/* Main Content, I sperated it in two, this is top... I'm not a designer :-) */}
         <Box sx={{

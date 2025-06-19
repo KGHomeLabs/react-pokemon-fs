@@ -164,8 +164,7 @@ export default function PokeLibPage() {
         </>
       )
       }
-
-      <Footer sx={{ textAlign: 'center', mt: 5 }} />
+      <Footer textAlign={'center'} marginTop={3} />
     </Box>
   );
 }

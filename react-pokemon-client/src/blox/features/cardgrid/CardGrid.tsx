@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import PokemonCard from '../pokemon-card/PokemonCard';
+import PokemonCard from './container/PokemonCard';
 import type { ICardGridProps } from './i-cardgrid';
 
 
