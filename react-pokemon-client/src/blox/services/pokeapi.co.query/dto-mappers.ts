@@ -1,5 +1,5 @@
-import type { IAPIPokemon, APIResourceList, IAPIPokemonSpecies, IAPIEvolutionChain, IAPIEvolutionChainLink } from './remote-return-types';
-import type { IPokemon, IPokemonListResult, IPokemonSpecies, IEvolutionChain, IEvolutionChainLink } from './local-return-types';
+import type { IAPIPokemon, APIResourceList, IAPIPokemonSpecies, IAPIEvolutionChain, IAPIEvolutionChainLink } from '../../../api/pokeapi.co/i-pokemon-api';
+import type { IPokemon, IPokemonListResult, IPokemonSpecies, IEvolutionChain, IEvolutionChainLink } from './i-pokemon-query';
 
 export const toIPokemon = (api: IAPIPokemon): IPokemon => ({
   id: api.id,

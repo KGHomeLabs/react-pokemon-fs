@@ -1,12 +1,11 @@
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ToastContainer } from 'react-toastify';
 
 import MyDeckPage from './SpaPages/PokeLibPage';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PokemonContextProvider } from './SpaPages/Context/IPokemonContext';
-import { ToastContainer } from 'react-toastify';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { isDev } from '../config/env-switch';
 import 'react-toastify/dist/ReactToastify.css';
+import { isDev } from '../config/env-switch';
+import { PokemonContextProvider } from './blox/Context/IPokemonContext';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: Infinity } },

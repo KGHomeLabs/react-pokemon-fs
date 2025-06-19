@@ -1,19 +1,19 @@
 import React, { createContext, useContext, useState } from 'react';
-import { usePokemonList } from '../../api/pokeapi.co/pokemon-query-hooks';
-import type { IPokemon } from '../../api/pokeapi.co/local-return-types';
+import { usePokemonListQuery } from '../services/pokeapi.co.query/pokemon-query-hooks';
+import type { IPokemon } from '../services/pokeapi.co.query/i-pokemon-query';
 
 interface IPokemonContextValue {
   pokemons: IPokemon[];
   isLoading: boolean;
   error: unknown;
- filterByPokemonName: string | null;
- setFilterByPokemonName: (name: string | null) => void;
+  filterByPokemonName: string | null;
+  setFilterByPokemonName: (name: string | null) => void;
 }
 
 const PokemonContext = createContext<IPokemonContextValue | null>(null);
 
 export const PokemonContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { data, isLoading, error } = usePokemonList({ limit: 100_000, offset: 0 });
+  const { data, isLoading, error } = usePokemonListQuery({ limit: 100_000, offset: 0 });
   const [filterByPokemonName, setFilterByPokemonName] = useState<string | null>(null);
 
   return (

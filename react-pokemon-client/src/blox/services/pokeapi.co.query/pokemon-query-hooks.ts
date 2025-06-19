@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import { pokemonClient } from './pokemon-client';
+import { pokemonClient } from '../../../api/pokeapi.co/pokemon-client';
 import { toIPokemon, toPokemonListResult,toIPokemonSpecies,toIEvolutionChain } from './dto-mappers';
 import type { IPokemon, 
   IPokemonListResult, 
   IPokemonListParams,
   IPokemonSpecies,
-  IEvolutionChain } from './local-return-types';
+  IEvolutionChain } from './i-pokemon-query';
 
 
-export const usePokemonList = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
+export const usePokemonListQuery = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
   useQuery<IPokemonListResult, Error>({
     queryKey: ['pokemonList', limit, offset],
     queryFn: async () => {
@@ -17,7 +17,7 @@ export const usePokemonList = ({ limit = 20, offset = 0 }: IPokemonListParams = 
     },
   });
 
-export const usePokemonByIdOrName = (idOrName: string | number) =>
+export const usePokemonByIdOrNameQuery = (idOrName: string | number) =>
   useQuery<IPokemon>({
     queryKey: ['pokemon', idOrName],
     queryFn: async () => {

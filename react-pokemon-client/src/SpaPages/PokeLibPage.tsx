@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Box, Typography, Stack, TextField } from '@mui/material';
-import CardGrid from './Components/CardGrid';
-import PokemonStdButton from './Components/PokemonStdButton';
-import Footer from './Components/Footer';
-import useDebounce from './CustomHooks/useDebounce';
-import { useFullPokemonList } from './Context/IPokemonContext';
-import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../api/pokeapi.co/pokemon-query-hooks';
-import type { IPokemon, IEvolutionChainLink } from '../api/pokeapi.co/local-return-types';
+import CardGrid from '../blox/features/cardgrid/CardGrid';
+import PokemonStdButton from '../blox/Components/PokemonStdButton';
+import Footer from '../blox/Components/Footer';
+import useDebounce from '../blox/CustomHooks/useDebounce';
+import { useFullPokemonList } from '../blox/Context/IPokemonContext';
+import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../blox/services/pokeapi.co.query/pokemon-query-hooks';
+import type { IPokemon, IEvolutionChainLink } from '../blox/services/pokeapi.co.query/i-pokemon-query';
 import { isDev, isPreview, getAppEnv } from '../../config/env-switch';
 
 //import {type ImportMeta} from '../../config/vite-env'
@@ -141,11 +141,11 @@ export default function PokeLibPage() {
         <Typography>No Pokémon match “{search}”</Typography>
       ) : (
         <>
-          <CardGrid cards={subset}
+          <CardGrid pokemons={subset}
             sx={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-              gap: 2
+              gap: 1
             }}
           />
 
