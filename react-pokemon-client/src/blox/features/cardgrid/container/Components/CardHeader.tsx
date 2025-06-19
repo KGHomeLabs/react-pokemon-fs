@@ -1,52 +1,34 @@
-
 import { Box, Typography, CardMedia } from '@mui/material';
 import styles from '../CardHeader.module.css';
 
 interface ICardHeaderProps {
     name: string;
-    pokeTypes: string;
-    imageUrl: string;
+    pokeTypes: string | undefined;
+    imageUrl: string | undefined | null;
 }
 
-export function CardHeader(cardHeaderProps: ICardHeaderProps) {
+export function CardHeader({ name, pokeTypes, imageUrl }: ICardHeaderProps) {
     return (
-        <Box sx={{
-            display: 'flex',
-            flex: '1 1 33%',
-            px: 1,
-            pt: '1px',
-            alignItems: 'flex-start' // exact spacing after the button area
-        }}
-        >
-            <Box sx={{ flex: 1 }} >
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom={false} sx={{ m: 0 }}>
-                    {cardHeaderProps.name}
+        <Box className={styles.cardHeaderContainer}>
+            <Box className={styles.cardText}>
+                <Typography variant="subtitle1" className={styles.cardName} gutterBottom={false}>
+                    {name}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                    {cardHeaderProps.pokeTypes}
+                    {pokeTypes}
                 </Typography>
             </Box>
-            <Box
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                {cardHeaderProps.imageUrl && (
+
+            <Box className={styles.cardImageWrapper}>
+                {imageUrl && (
                     <CardMedia
                         component="img"
-                        image={cardHeaderProps.imageUrl}
-                        alt={cardHeaderProps.name}
-                        sx={{
-                            maxHeight: '100%',
-                            maxWidth: '100%',
-                            objectFit: 'contain',
-                        }}
+                        image={imageUrl}
+                        alt={name}
+                        className={styles.cardImage}
                     />
                 )}
             </Box>
         </Box>
-    )
+    );
 }

@@ -1,0 +1,31 @@
+
+.cardHeaderContainer {
+  display: flex;
+  flex: 1 1 33%;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 10px;
+  align-items: flex-start;
+}
+
+.cardText {
+  flex: 1;
+}
+
+.cardImageWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardImage {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.cardName {
+  margin: 0;
+  font-weight: bold;
+}

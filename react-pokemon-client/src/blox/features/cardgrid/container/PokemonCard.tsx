@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
+import { Card, Box } from '@mui/material';
 
 //outer Interface 
 import type { IPokemonCardProps } from './i-pokemon-card-props';
@@ -16,6 +16,8 @@ import type { IPokemon } from '../../../services/pokeapi.co.query/i-pokemon-quer
 import { useFullPokemonList } from '../../../Context/IPokemonContext';
 import CardIsLoading from './Components/CardIsLoading';
 import FunctionRibbon from './Components/FunctionRibbon';
+import { CardHeader } from './Components/CardHeader';
+import { CardMainContent } from './Components/CardMainContent';
 
 
 export default function PokemonCard({ name }: IPokemonCardProps) {
@@ -49,58 +51,10 @@ export default function PokemonCard({ name }: IPokemonCardProps) {
         {/* Little card speciffic function area to appear e.g. on hover for card speciffic functions*/}
         <FunctionRibbon name={name} hovered={hovered} filterCallback={setFilterByPokemonName}></FunctionRibbon>
 
-        {/* Main Content, I sperated it in two, this is top... I'm not a designer :-) */}
-        <Box sx={{
-          display: 'flex',
-          flex: '1 1 33%',
-          px: 1,
-          pt: '1px',
-          alignItems: 'flex-start', // exact spacing after the button area
-        }}
-        >
-          <Box sx={{ flex: 1 }} >
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom={false} sx={{ m: 0 }}>
-              {name}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {data?.types?.join(' / ')}
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {data?.img && (
-              <CardMedia
-                component="img"
-                image={data?.img}
-                alt={name}
-                sx={{
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            )}
-          </Box>
-        </Box>
+        {/*Header of Main Content, I sperated it in two, this is top... I'm not a designer :-) */}
+        <CardHeader imageUrl={data?.img} name={name} pokeTypes={data?.types?.join(' / ')}></CardHeader>
 
-        <CardContent
-          sx={{
-            flex: '1 1 auto',
-            p: 1,
-            m: 0,
-            '&:last-child': { pb: 1 } // this took forever to find. override MUI's default extra bottom padding          
-          }}
-        >
-          <Typography variant="body2" color="text.secondary">
-            {'No description displayed (yet).'}
-          </Typography>
-        </CardContent>
+        <CardMainContent></CardMainContent>
       </Card>
     </Box>
   );

@@ -1,0 +1,10 @@
+.cardMainContent {
+  flex: 1 1 auto;
+  padding: 8px;
+  margin: 0;
+}
+
+/* MUI adds extra padding to the last child of CardContent. This overrides it. */
+.cardMainContent:last-child {
+  padding-bottom: 8px;
+}
