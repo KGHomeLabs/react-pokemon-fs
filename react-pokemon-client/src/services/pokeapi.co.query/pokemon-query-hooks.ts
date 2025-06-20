@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { pokemonClient } from '../../../api/pokeapi.co/pokemon-client';
+import { pokemonClient } from '../../api/pokeapi.co/pokemon-client';
 import { toIPokemon, toPokemonListResult,toIPokemonSpecies,toIEvolutionChain } from './dto-mappers';
 import type { IPokemon, 
   IPokemonListResult, 

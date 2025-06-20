@@ -1,4 +1,4 @@
-import type { IAPIPokemon, APIResourceList, IAPIPokemonSpecies, IAPIEvolutionChain, IAPIEvolutionChainLink } from '../../../api/pokeapi.co/i-pokemon-api';
+import type { IAPIPokemon, APIResourceList, IAPIPokemonSpecies, IAPIEvolutionChain, IAPIEvolutionChainLink } from '../../api/pokeapi.co/i-pokemon-api';
 import type { IPokemon, IPokemonListResult, IPokemonSpecies, IEvolutionChain, IEvolutionChainLink } from './data-pokemon';
 
 export const toIPokemon = (api: IAPIPokemon): IPokemon => ({

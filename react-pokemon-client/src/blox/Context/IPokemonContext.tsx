@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { usePokemonListQuery } from '../services/pokeapi.co.query/pokemon-query-hooks';
-import type { IPokemon } from '../services/pokeapi.co.query/data-pokemon';
+import { usePokemonListQuery } from '../../services/pokeapi.co.query/pokemon-query-hooks';
+import type { IPokemon } from '../../services/pokeapi.co.query/data-pokemon';
 
 interface IPokemonContextValue {
   pokemons: IPokemon[];
