@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ToastContainer } from 'react-toastify';
 
-import MyDeckPage from './SpaPages/PokeLibPage';
+import MyDeckPage from './Pages/PokeLibPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { isDev } from '../config/env-switch';
 import { PokemonContextProvider } from './blox/Context/IPokemonContext';

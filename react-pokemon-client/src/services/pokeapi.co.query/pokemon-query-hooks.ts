@@ -6,7 +6,7 @@ import type { IPokemon,
   IPokemonListParams,
   IPokemonSpecies,
   IEvolutionChain } from './data-pokemon';
-
+import type { IPokemonQueryService } from './i-pokemon-query-service';
 
 export const usePokemonListQuery = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
   useQuery<IPokemonListResult, Error>({
@@ -126,3 +126,13 @@ export const useNatureByIdOrName = (idOrName: string | number) =>
 
 export const useStatByIdOrName = (idOrName: string | number) =>
   useQuery({ queryKey: ['stat', idOrName], queryFn: () => pokemonClient.getStatByIdOrName(idOrName) });
+
+
+export const PokemonQueryService: IPokemonQueryService = {
+  usePokemonListQuery,
+  usePokemonByIdOrNameQuery,
+  usePokemonSpeciesByIdOrName,
+  useEvolutionChainById,
+};
+//typecheck to ensure that this is actually a fit
+void (PokemonQueryService as IPokemonQueryService);
