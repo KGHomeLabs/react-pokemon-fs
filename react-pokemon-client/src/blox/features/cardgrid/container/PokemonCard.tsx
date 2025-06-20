@@ -24,7 +24,7 @@ export default function PokemonCard(InputProps: IPokemonCardProps) {
   const { setFilterByPokemonName } = useFullPokemonList();
   const [hovered, setHovered] = useState(false);
   //services
-  const queryService: IPokemonQueryService = HookDIRegistry.use<IPokemonQueryService>();;
+  const queryService: IPokemonQueryService = HookDIRegistry.use<IPokemonQueryService>();
   //database queries
   const query = queryService.usePokemonByIdOrNameQuery(InputProps.name);
   const data: IPokemon | undefined = query.data;
