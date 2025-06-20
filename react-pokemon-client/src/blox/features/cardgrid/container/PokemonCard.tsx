@@ -7,7 +7,6 @@ import type { IPokemonCardProps } from './i-pokemon-card-props';
 ///IN: Services, Context, Components
 import type { IPokemon } from '../../../../services/pokeapi.co.query/data-pokemon'
 import type { IPokemonQueryService } from '../../../../services/pokeapi.co.query/i-pokemon-query-service';
-import { PokemonQueryService } from '../../../../services/pokeapi.co.query/pokemon-query-hooks';
 
 //Owned by this Feature
 import { useFullPokemonList } from '../../../Context/IPokemonContext';
@@ -17,6 +16,7 @@ import { CardHeader } from './Components/CardHeader';
 import { CardMainContent } from './Components/CardMainContent';
 import { getRibbonColor } from './utils/poke-type2color';
 import cardStyles from '../CardLayout.module.css';
+import { HookDIRegistry } from '../../../../utils/DIHookRegistry';
 
 
 export default function PokemonCard(InputProps: IPokemonCardProps) {
@@ -24,7 +24,7 @@ export default function PokemonCard(InputProps: IPokemonCardProps) {
   const { setFilterByPokemonName } = useFullPokemonList();
   const [hovered, setHovered] = useState(false);
   //services
-  const queryService: IPokemonQueryService = PokemonQueryService;
+  const queryService: IPokemonQueryService = HookDIRegistry.use<IPokemonQueryService>();;
   //database queries
   const query = queryService.usePokemonByIdOrNameQuery(InputProps.name);
   const data: IPokemon | undefined = query.data;
