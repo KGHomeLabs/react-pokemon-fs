@@ -1,7 +1,7 @@
-import type { IAPIPokemon, APIResourceList, IAPIPokemonSpecies, IAPIEvolutionChain, IAPIEvolutionChainLink } from '../../api/pokeapi.co/i-pokemon-api';
+import type { DTOPokemon, DTOResourceList, DTOPokemonSpecies, DTOEvolutionChain, DTOEvolutionChainLink } from '../../api/pokeapi.co/data-pokemon-api';
 import type { IPokemon, IPokemonListResult, IPokemonSpecies, IEvolutionChain, IEvolutionChainLink } from './data-pokemon';
 
-export const toIPokemon = (api: IAPIPokemon): IPokemon => ({
+export const toIPokemon = (api: DTOPokemon): IPokemon => ({
   id: api.id,
   name: api.name,
   img: api.sprites.front_default ?? null,
@@ -10,7 +10,7 @@ export const toIPokemon = (api: IAPIPokemon): IPokemon => ({
   stats: {},
 });
 
-export const toPokemonListResult = (apiList: APIResourceList): IPokemonListResult => ({
+export const toPokemonListResult = (apiList: DTOResourceList): IPokemonListResult => ({
   count: apiList.count,
   results: apiList.results.map((r) => ({
     id: -1,
@@ -22,18 +22,18 @@ export const toPokemonListResult = (apiList: APIResourceList): IPokemonListResul
   })),
 });
 
-export const toIPokemonSpecies = (api: IAPIPokemonSpecies): IPokemonSpecies => ({
+export const toIPokemonSpecies = (api: DTOPokemonSpecies): IPokemonSpecies => ({
   id: api.id,
   name: api.name,
   evolutionChainId: parseInt(api.evolution_chain.url.split('/').filter(Boolean).pop() || '0', 10),
 });
 
-export const toIEvolutionChain = (api: IAPIEvolutionChain): IEvolutionChain => ({
+export const toIEvolutionChain = (api: DTOEvolutionChain): IEvolutionChain => ({
   id: api.id,
   chain: toIEvolutionChainLink(api.chain),
 });
 
-const toIEvolutionChainLink = (api: IAPIEvolutionChainLink): IEvolutionChainLink => ({
+const toIEvolutionChainLink = (api: DTOEvolutionChainLink): IEvolutionChainLink => ({
   speciesName: api.species?.name ?? '',
   evolvesTo: api.evolves_to?.map(toIEvolutionChainLink) ?? [],
 });
