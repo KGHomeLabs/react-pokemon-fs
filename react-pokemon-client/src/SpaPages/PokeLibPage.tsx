@@ -7,7 +7,7 @@ import Footer from '../blox/Components/Footer';
 import useDebounce from '../blox/CustomHooks/useDebounce';
 import { useFullPokemonList } from '../blox/Context/IPokemonContext';
 import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../blox/services/pokeapi.co.query/pokemon-query-hooks';
-import type { IPokemon, IEvolutionChainLink } from '../blox/services/pokeapi.co.query/i-pokemon-query';
+import type { IPokemon, IEvolutionChainLink } from '../blox/services/pokeapi.co.query/data-pokemon';
 import { isDev, isPreview, getAppEnv } from '../../config/env-switch';
 
 //import {type ImportMeta} from '../../config/vite-env'

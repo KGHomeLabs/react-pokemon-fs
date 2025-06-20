@@ -5,7 +5,7 @@ import type { IPokemon,
   IPokemonListResult, 
   IPokemonListParams,
   IPokemonSpecies,
-  IEvolutionChain } from './i-pokemon-query';
+  IEvolutionChain } from './data-pokemon';
 
 
 export const usePokemonListQuery = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>

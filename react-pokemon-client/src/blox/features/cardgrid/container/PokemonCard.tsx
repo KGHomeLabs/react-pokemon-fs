@@ -10,7 +10,7 @@ import cardStyles from '../CardLayout.module.css';
 
 ///IN: Services, Context, Components
 import { usePokemonByIdOrNameQuery } from '../../../services/pokeapi.co.query/pokemon-query-hooks';
-import type { IPokemon } from '../../../services/pokeapi.co.query/i-pokemon-query'
+import type { IPokemon } from '../../../services/pokeapi.co.query/data-pokemon'
 
 //Sets a method
 import { useFullPokemonList } from '../../../Context/IPokemonContext';

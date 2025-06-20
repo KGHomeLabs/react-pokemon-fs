@@ -3,13 +3,13 @@ import { Card, Typography } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 
 
-interface CardIsLoadingProps {
+interface ICardIsLoadingProps {
     sx?: SxProps<Theme>;
     className?: string;
     children?: React.ReactNode;
 }
 
-export default function CardIsLoading({ children, className, sx }: CardIsLoadingProps) {
+export default function CardIsLoading({ children, className, sx }: ICardIsLoadingProps) {
     return (
         <Card sx={sx} className={className}>
             <Typography>Loading . . .</Typography>
