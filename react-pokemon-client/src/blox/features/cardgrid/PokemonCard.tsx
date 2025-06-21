@@ -5,18 +5,18 @@ import { Card, Box } from '@mui/material';
 import type { IPokemonCardProps } from './i-pokemon-card-props';
 
 ///IN: Services, Context, Components
-import type { IPokemon } from '../../../../services/pokeapi.co.query/data-pokemon'
-import type { IPokemonQueryService } from '../../../../services/pokeapi.co.query/i-pokemon-query-service';
+import type { IPokemon } from '../../../services/pokeapi.co.query/data-pokemon'
+import type { IPokemonQueryService } from '../../../services/pokeapi.co.query/i-pokemon-query-service';
 
 //Owned by this Feature
-import { useFullPokemonList } from '../../../Context/IPokemonContext';
-import CardIsLoading from './Components/CardIsLoading';
-import FunctionRibbon from './Components/FunctionRibbon';
-import { CardHeader } from './Components/CardHeader';
-import { CardMainContent } from './Components/CardMainContent';
-import { getRibbonColor } from './utils/poke-type2color';
-import cardStyles from '../CardLayout.module.css';
-import { HookDIRegistry } from '../../../../utils/DIHookRegistry';
+import { useFullPokemonList } from '../../Context/IPokemonContext';
+import CardIsLoading from './container/Components/CardIsLoading';
+import FunctionRibbon from './container/Components/FunctionRibbon';
+import { CardHeader } from './container/Components/CardHeader';
+import { CardMainContent } from './container/Components/CardMainContent';
+import { getRibbonColor } from './container/utils/poke-type2color';
+import cardStyles from './CardLayout.module.css';
+import { HookDIRegistry } from '../../../utils/DIHookRegistry';
 
 
 export default function PokemonCard(InputProps: IPokemonCardProps) {
