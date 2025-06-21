@@ -1,8 +1,9 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
+import type IHttpClient from './i-http-client';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
-export class HttpClient {
+export default class HttpClient implements IHttpClient {
   private client: AxiosInstance;
 
   constructor(client: AxiosInstance) {
@@ -11,12 +12,9 @@ export class HttpClient {
 
   private request<T>(method: HttpMethod, url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.client
-      .request<T>({method, url, data,...config,})
+      .request<T>({ method, url, data, ...config })
       .then((response) => response.data)
       .catch((error) => {
-         //   if (import.meta.env.MODE === 'development') {
-         //   console.error(`[HttpClient] ${method.toUpperCase()} ${url}`, error);
-         //   }
         console.error(`[HttpClient] ${method.toUpperCase()} ${url}`, error);
         throw error;
       });

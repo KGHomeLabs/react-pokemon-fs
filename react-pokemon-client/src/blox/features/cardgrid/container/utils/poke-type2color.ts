@@ -50,7 +50,7 @@ const GAME_TO_TCG_TYPE: Record<GameType, TcgType> = {
 };
 
 // 4. Final lookup function with safe fallback and validation
-export function getRibbonColor(type: string): string {
+export default function getRibbonColor(type: string): string {
   const gameType = type.toLowerCase() as GameType;
   const tcgType = GAME_TO_TCG_TYPE[gameType] || 'colorless';
   return TCG_TYPE_COLORS[tcgType];

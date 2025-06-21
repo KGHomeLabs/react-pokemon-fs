@@ -1,0 +1,34 @@
+.cardContainer {
+  width: 100%;
+  aspect-ratio: 2 / 3;  
+}
+
+.loadingCard {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardTopLevelLayout {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1px; /* Visible gap */
+  height: 100%; 
+  width: 100%; 
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cardTopLevelLayout:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Matches MUI shadows[6] */
+}
+
+.ribbon {
+  height: 15px;    
+}
