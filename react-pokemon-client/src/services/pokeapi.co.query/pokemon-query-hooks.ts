@@ -8,9 +8,13 @@ import type { IPokemon, IPokemonListResult, IPokemonListParams, IPokemonSpecies,
 import PokemonHTTPService from '../../api/pokeapi.co/pokemon-http-service';
 import type IPokemonQueryService from './i-pokemon-query-service';
 import type IPokemonHTTPService from '../../api/pokeapi.co/i-pokemon-http-service';
+import HttpClient from '../../lib/http-client/http-client';
+import { createAxiosInstance } from '../../lib/http-client/axios-instance';
+import { POKEMON_V2_API_URLS } from '../../api/pokeapi.co/urls';
 
 //Get the HTTP Pokemon Service
-const pokemonService: IPokemonHTTPService = new PokemonHTTPService;
+const httpClient = new HttpClient(createAxiosInstance(POKEMON_V2_API_URLS.BASE_URL));
+const pokemonService: IPokemonHTTPService = new PokemonHTTPService(httpClient);
 
 export const usePokemonListQuery = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
   useQuery<IPokemonListResult, Error>({
