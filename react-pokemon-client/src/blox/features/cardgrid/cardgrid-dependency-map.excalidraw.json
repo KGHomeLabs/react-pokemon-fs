@@ -36,16 +36,8 @@
           0
         ]
       ],
-      "startBinding": {
-        "elementId": "bda0014e-f249-454a-b71b-69ac77446572",
-        "focus": 0.5,
-        "gap": 4
-      },
-      "endBinding": {
-        "elementId": "8e147962-a218-4b39-8062-4f2e97a737c9",
-        "focus": 0.5,
-        "gap": 4
-      },
+      "startBinding": null,
+      "endBinding": null,
       "startArrowhead": null,
       "endArrowhead": "arrow",
       "locked": false,
@@ -87,16 +79,8 @@
           0
         ]
       ],
-      "startBinding": {
-        "elementId": "8e147962-a218-4b39-8062-4f2e97a737c9",
-        "focus": 0.5,
-        "gap": 4
-      },
-      "endBinding": {
-        "elementId": "99a9b225-a2a6-4574-bed0-e433bfd75360",
-        "focus": 0.5,
-        "gap": 4
-      },
+      "startBinding": null,
+      "endBinding": null,
       "startArrowhead": null,
       "endArrowhead": "arrow",
       "locked": false,
@@ -138,16 +122,8 @@
           0
         ]
       ],
-      "startBinding": {
-        "elementId": "8e147962-a218-4b39-8062-4f2e97a737c9",
-        "focus": 0.5,
-        "gap": 4
-      },
-      "endBinding": {
-        "elementId": "0eeb54c9-e12a-461f-a140-5921048adda9",
-        "focus": 0.5,
-        "gap": 4
-      },
+      "startBinding": null,
+      "endBinding": null,
       "startArrowhead": null,
       "endArrowhead": "arrow",
       "locked": false,
@@ -222,7 +198,7 @@
       "version": 402,
       "versionNonce": 966083919,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379053013,
       "link": null,
       "locked": false,
@@ -342,7 +318,7 @@
       "version": 409,
       "versionNonce": 1045210575,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379053013,
       "link": "./i-cardgrid.ts",
       "locked": false,
@@ -378,12 +354,12 @@
       "index": "aFG",
       "roundness": null,
       "seed": 1305084417,
-      "version": 745,
-      "versionNonce": 501612911,
+      "version": 746,
+      "versionNonce": 1016154375,
       "isDeleted": false,
-      "boundElements": null,
-      "updated": 1750379003880,
-      "link": "./container/i-pokemon-card-props.ts",
+      "boundElements": [],
+      "updated": 1750477302769,
+      "link": "./i-pokemon-card-props.ts",
       "locked": false,
       "text": "IPokemonCardProps",
       "fontSize": 18.714747296710147,
@@ -419,8 +395,8 @@
         "type": 3
       },
       "seed": 1394206177,
-      "version": 1267,
-      "versionNonce": 595081441,
+      "version": 1268,
+      "versionNonce": 1621750375,
       "isDeleted": false,
       "boundElements": [
         {
@@ -448,8 +424,8 @@
           "type": "arrow"
         }
       ],
-      "updated": 1750379824686,
-      "link": "./container/PokemonCard.tsx",
+      "updated": 1750477319096,
+      "link": "./PokemonCard.tsx",
       "locked": false
     },
     {
@@ -602,7 +578,7 @@
       "version": 599,
       "versionNonce": 478004079,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379053013,
       "link": null,
       "locked": false,
@@ -656,7 +632,7 @@
       "version": 240,
       "versionNonce": 1490067567,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -712,7 +688,7 @@
       "version": 189,
       "versionNonce": 1381704193,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -751,7 +727,7 @@
       "version": 262,
       "versionNonce": 1843444367,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false
@@ -779,7 +755,7 @@
       "version": 459,
       "versionNonce": 1770600929,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -818,7 +794,7 @@
       "version": 328,
       "versionNonce": 581631791,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false
@@ -848,7 +824,7 @@
       "version": 265,
       "versionNonce": 847331663,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -906,7 +882,7 @@
       "version": 149,
       "versionNonce": 573144865,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -962,7 +938,7 @@
       "version": 143,
       "versionNonce": 243941231,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -1001,7 +977,7 @@
       "version": 99,
       "versionNonce": 2001773263,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003880,
       "link": null,
       "locked": false,
@@ -1053,7 +1029,7 @@
       "version": 575,
       "versionNonce": 1634142401,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379003597,
       "link": null,
       "locked": false,
@@ -1896,7 +1872,7 @@
       "version": 486,
       "versionNonce": 2124942753,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1750379838060,
       "link": null,
       "locked": false,

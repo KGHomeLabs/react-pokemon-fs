@@ -4,11 +4,9 @@ import { Card, Box } from '@mui/material';
 //Exposed Interface 
 import type { IPokemonCardProps } from './i-pokemon-card-props';
 
-///IN: Services, Context, Components
+///IN: Services, Context, Components //State/Context/DI
 import type { IPokemon } from '../../../services/pokeapi.co.query/data-pokemon'
 import type IPokemonQueryService from '../../../services/pokeapi.co.query/i-pokemon-query-service';
-
-//State/Context/DI
 import useFullPokemonList from '../../Context/IPokemonContext';
 import HookDIRegistry from '../../../utils/DIHookRegistry';
 

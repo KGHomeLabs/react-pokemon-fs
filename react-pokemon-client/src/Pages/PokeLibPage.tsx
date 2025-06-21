@@ -1,26 +1,35 @@
 import { useState, useMemo, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Box, Typography, Stack, TextField } from '@mui/material';
+
+//Components/Features
 import CardGrid from '../blox/features/cardgrid/CardGrid';
 import PokemonStdButton from '../blox/Components/PokemonStdButton';
 import Footer from '../blox/Components/Footer';
-import useDebounce from '../blox/CustomHooks/useDebounce';
+
+///IN: Services, Context, Components //State/Context/DI
 import useFullPokemonList from '../blox/Context/IPokemonContext';
-import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../services/pokeapi.co.query/pokemon-query-hooks';
+import HookDIRegistry from '../utils/DIHookRegistry';
+import type IPokemonQueryService from '../services/pokeapi.co.query/i-pokemon-query-service';
 import type { IPokemon, IEvolutionChainLink } from '../services/pokeapi.co.query/data-pokemon';
 import { isDev, isPreview, getAppEnv } from '../../config/env-switch';
 
-//import {type ImportMeta} from '../../config/vite-env'
+//Utils
+import useDebounce from '../blox/CustomHooks/useDebounce';
 
 const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
   const computedEnv = getAppEnv();
 
-  // get the full IPokemon[] array, I think it camye from the context
+  // STATE get the full IPokemon[] array, I think it camye from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
   const [search, setSearch] = useState('');
+
+  //services
+  const queryService: IPokemonQueryService = HookDIRegistry.use<IPokemonQueryService>();
+
   //wenn sich search ändert soll ein timer gesetzt werden, this sets that timer while typing
   //debounced is whatever input of search is after 240ms of no typing
   const debounced = useDebounce(search, 240);
@@ -37,8 +46,8 @@ export default function PokeLibPage() {
     ? filterByPokemonName.replace(/-mega.*$/, '') // e.g., "charizard-mega-x" -> "charizard"
     : null;
   // Fetch species and evolution chain data
-  const speciesQuery = usePokemonSpeciesByIdOrName(speciesName);
-  const evolutionQuery = useEvolutionChainById(speciesQuery.data?.evolutionChainId ?? 0);
+  const speciesQuery = queryService.usePokemonSpeciesByIdOrName(speciesName);
+  const evolutionQuery = queryService.useEvolutionChainById(speciesQuery.data?.evolutionChainId ?? 0);
 
   //run function every time the pokemons array or debounced search changes
   //but... tres importante... only the value changed no re-renders
