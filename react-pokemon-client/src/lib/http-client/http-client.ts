@@ -1,9 +1,9 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
-import type { IHttpClient } from './i-http-client';
+import type IHttpClient from './i-http-client';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
-export class HttpClient implements IHttpClient {
+export default class HttpClient implements IHttpClient {
   private client: AxiosInstance;
 
   constructor(client: AxiosInstance) {

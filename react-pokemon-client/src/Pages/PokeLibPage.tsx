@@ -5,7 +5,7 @@ import CardGrid from '../blox/features/cardgrid/CardGrid';
 import PokemonStdButton from '../blox/Components/PokemonStdButton';
 import Footer from '../blox/Components/Footer';
 import useDebounce from '../blox/CustomHooks/useDebounce';
-import { useFullPokemonList } from '../blox/Context/IPokemonContext';
+import useFullPokemonList from '../blox/Context/IPokemonContext';
 import { usePokemonSpeciesByIdOrName, useEvolutionChainById } from '../services/pokeapi.co.query/pokemon-query-hooks';
 import type { IPokemon, IEvolutionChainLink } from '../services/pokeapi.co.query/data-pokemon';
 import { isDev, isPreview, getAppEnv } from '../../config/env-switch';

@@ -31,7 +31,7 @@ export const PokemonContextProvider: React.FC<React.PropsWithChildren> = ({ chil
   );
 };
 
-export function useFullPokemonList() {
+export default function useFullPokemonList() {
   const ctx = useContext(PokemonContext);
   if (!ctx) throw new Error('useFullPokemonList must be inside <PokemonContextProvider>');
   return ctx;

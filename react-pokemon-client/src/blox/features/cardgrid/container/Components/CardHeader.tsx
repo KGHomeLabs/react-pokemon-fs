@@ -7,7 +7,7 @@ interface ICardHeaderProps {
     imageUrl: string | undefined | null;
 }
 
-export function CardHeader({ name, pokeTypes, imageUrl }: ICardHeaderProps) {
+export default function CardHeader({ name, pokeTypes, imageUrl }: ICardHeaderProps) {
     return (
         <Box className={styles.cardHeaderContainer}>
             <Box className={styles.cardText}>

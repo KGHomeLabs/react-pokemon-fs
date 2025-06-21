@@ -4,7 +4,7 @@ import type { Context, ReactNode } from 'react';
 type ServiceType = { [key: string]: any };
 type TypeKey<T> = symbol | (new (...args: any[]) => T);
 
-export class HookDIRegistry {
+export default class HookDIRegistry {
   private static serviceMap = new Map<TypeKey<any>, ServiceType>();
   private static contextMap = new Map<TypeKey<any>, Context<ServiceType>>();
 

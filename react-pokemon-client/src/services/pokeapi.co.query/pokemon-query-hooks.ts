@@ -5,9 +5,9 @@ import { toIPokemon, toPokemonListResult, toIPokemonSpecies, toIEvolutionChain }
 import type { IPokemon, IPokemonListResult, IPokemonListParams, IPokemonSpecies, IEvolutionChain } from './data-pokemon';
 
 //services and service interfaces
-import { PokemonHTTPService } from '../../api/pokeapi.co/pokemon-http-service';
-import type { IPokemonQueryService } from './i-pokemon-query-service';
-import type { IPokemonHTTPService } from '../../api/pokeapi.co/i-pokemon-http-service';
+import PokemonHTTPService from '../../api/pokeapi.co/pokemon-http-service';
+import type IPokemonQueryService from './i-pokemon-query-service';
+import type IPokemonHTTPService from '../../api/pokeapi.co/i-pokemon-http-service';
 
 //Get the HTTP Pokemon Service
 const pokemonService: IPokemonHTTPService = new PokemonHTTPService;

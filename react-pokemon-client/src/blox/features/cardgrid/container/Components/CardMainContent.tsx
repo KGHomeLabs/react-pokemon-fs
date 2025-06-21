@@ -1,7 +1,7 @@
 import { Typography, CardContent } from '@mui/material';
 import styles from '../CardMainContent.module.css';
 
-export function CardMainContent() {
+export default function CardMainContent() {
     return (
         <CardContent className={styles.cardMainContent}>
             <Typography variant="body2" color="text.secondary">

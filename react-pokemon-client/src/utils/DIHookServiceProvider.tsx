@@ -1,4 +1,4 @@
-import { HookDIRegistry } from './DIHookRegistry';
+import HookDIRegistry from './DIHookRegistry';
 import type { ReactNode } from 'react';
 
 export const DIHookServiceProvider = ({ children }: { children: ReactNode }) => {

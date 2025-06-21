@@ -1,10 +1,12 @@
 import { createAxiosInstance } from '../../lib/http-client/axios-instance';
-import { HttpClient } from '../../lib/http-client/http-client';
-import { POKEMON_V2_API_URLS } from './urls';
-import type { DTOResourceList, DTOPokemon, DTONamedResource, DTOPokemonSpecies, DTOEvolutionChain } from './data-pokemon-api';
-import type { IPokemonHTTPService } from './i-pokemon-http-service';
 
-export class PokemonHTTPService implements IPokemonHTTPService {
+import { POKEMON_V2_API_URLS } from './urls';
+import HttpClient from '../../lib/http-client/http-client';
+import type IPokemonHTTPService from './i-pokemon-http-service';
+import type { DTOResourceList, DTOPokemon, DTONamedResource, DTOPokemonSpecies, DTOEvolutionChain } from './data-pokemon-api';
+
+
+export default class PokemonHTTPService implements IPokemonHTTPService {
   private httpClient: HttpClient;
 
   constructor() {
