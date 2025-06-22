@@ -8,7 +8,7 @@ import type { IPokemonCardProps } from './i-pokemon-card-props';
 import type { IPokemon } from '../../../services/pokeapi.co.query/data-pokemon'
 import type IPokemonQueryService from '../../../services/pokeapi.co.query/i-pokemon-query-service';
 import useFullPokemonList from '../../Context/IPokemonContext';
-import HookDIRegistry from '../../../utils/DIHookRegistry';
+import HookDIRegistry from '../../../di/DIHookRegistry';
 
 //Owned by this Feature
 import CardIsLoading from './container/Components/CardIsLoading';
