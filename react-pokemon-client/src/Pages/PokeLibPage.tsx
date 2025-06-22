@@ -9,7 +9,7 @@ import Footer from '../blox/Components/Footer';
 
 ///IN: Services, Context, Components //State/Context/DI
 import useFullPokemonList from '../blox/Context/IPokemonContext';
-import HookDIRegistry from '../utils/DIHookRegistry';
+import HookDIRegistry from '../di/DIHookRegistry';
 import type IPokemonQueryService from '../services/pokeapi.co.query/i-pokemon-query-service';
 import type { IPokemon } from '../services/pokeapi.co.query/data-pokemon';
 import { getAppEnv } from '../../config/env-switch';

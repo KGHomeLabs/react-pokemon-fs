@@ -19,7 +19,7 @@
     "baseUrl": "../", // Relative to config/ to point to project root
     "paths": {
       "@config/*": [
-        // "config/*"
+        "config/*"
       ] // Maps @config/ imports to config/ folder
     },
   }
