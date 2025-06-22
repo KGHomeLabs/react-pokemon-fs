@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Box, Typography, Stack, TextField } from '@mui/material';
 
@@ -11,12 +11,14 @@ import Footer from '../blox/Components/Footer';
 import useFullPokemonList from '../blox/Context/IPokemonContext';
 import HookDIRegistry from '../utils/DIHookRegistry';
 import type IPokemonQueryService from '../services/pokeapi.co.query/i-pokemon-query-service';
-import type { IPokemon, IEvolutionChainLink } from '../services/pokeapi.co.query/data-pokemon';
+import type { IPokemon } from '../services/pokeapi.co.query/data-pokemon';
 import { getAppEnv } from '../../config/env-switch';
 
 //Utils
 import useDebounce from '../blox/CustomHooks/useDebounce';
 import EnvLabel from '../blox/features/env-label/EnvLabel';
+import { Paginator } from '../blox/features/pagination/Paginator';
+import { useFilteredPokemonMemo } from '../blox/CustomHooks/useFilteredPokemonMemo';
 
 const PAGE_SIZE = 20;
 
@@ -53,32 +55,13 @@ export default function PokeLibPage() {
   //but... tres importante... only the value changed no re-renders
   //useRef for functions
   // Compute filtered Pokémon list
-  const filtered: IPokemon[] = useMemo(() => {
-    if (filterByPokemonName && speciesQuery.data && evolutionQuery.data) {
-      const getEvolutionNames = (chain: IEvolutionChainLink): string[] => {
-        if (!chain.speciesName) return [];
-        let names = [chain.speciesName];
-        if (chain.evolvesTo.length > 0) {
-          chain.evolvesTo.forEach((evo) => {
-            names.push(...getEvolutionNames(evo));
-          });
-        } else {
-          // Add Mega Evolutions for final species
-          const megaForms = pokemons
-            .filter(p => new RegExp(`^${chain.speciesName}-mega(-[xy])?$`, 'i').test(p.name))
-            .map(p => p.name);
-          names = [...names, ...megaForms];
-        }
-
-        return [...new Set(names)];
-      };
-      const pokemonNames = getEvolutionNames(evolutionQuery.data.chain);
-      return pokemonNames
-        .map((name) => pokemons.find((p) => p.name === name))
-        .filter((p): p is IPokemon => !!p);
-    }
-    return pokemons.filter((p) => p.name.toLowerCase().includes(debounced.toLowerCase()));
-  }, [pokemons, debounced, filterByPokemonName, speciesQuery.data, evolutionQuery.data]);
+  const filtered: IPokemon[] = useFilteredPokemonMemo(  //this masively manipulates state
+    pokemons,
+    debounced,
+    filterByPokemonName,
+    speciesQuery.data,
+    evolutionQuery.data
+  );
 
   // pagination values
   const [page, setPage] = useState(1);
@@ -96,8 +79,12 @@ export default function PokeLibPage() {
     setPage(1);
   }, [debounced, filterByPokemonName]);
 
+  //Handle isLoading state for entire page
   if (isLoading) return <Typography>Loading Pokémon list…</Typography>;
+  //Handle error state for entire page related to fetching the list
   if (error) return <Typography color="error">Error loading list</Typography>;
+  //Handle error state for species or evolution queries when filtering by Pokémon name
+  // This is to handle the case where the species or evolution chain data is not found
   if (filterByPokemonName && (speciesQuery.error || evolutionQuery.error)) {
     return (
       <Typography color="error">
@@ -105,6 +92,8 @@ export default function PokeLibPage() {
       </Typography>
     );
   }
+  // if none of the above conditions are met, render the page
+  // this is the main content of the page, showing the Pokémon list and the filter/search
   return (
     <Box sx={{ p: 4 }}>
       <EnvLabel computedEnv={computedEnv} />
@@ -122,12 +111,7 @@ export default function PokeLibPage() {
 
       {/* Sort + Search */}
       <Stack direction="row" spacing={3} mb={3} alignItems="center">
-        <TextField
-          label="Search by name"
-          size="small"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <TextField label="Search by name" size="small" value={search} onChange={(e) => setSearch(e.target.value)} />
       </Stack>
 
       {total === 0 ? (
@@ -143,17 +127,7 @@ export default function PokeLibPage() {
           />
 
           {/* Pagination */}
-          <Box display="flex" justifyContent="center" mt={3} gap={2}>
-            <PokemonStdButton onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
-              Previous
-            </PokemonStdButton>
-            <Typography>
-              Page {page} of {totalPages}
-            </Typography>
-            <PokemonStdButton onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
-              Next
-            </PokemonStdButton>
-          </Box>
+          <Paginator currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )
       }

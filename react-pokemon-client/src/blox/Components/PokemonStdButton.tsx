@@ -8,7 +8,7 @@ type StdButtonProps = {
   children?: ReactNode;
 } & ButtonProps;
 
-export default function Footer({ sx, children, ...rest }: StdButtonProps) {
+export default function PokemonStdButton({ sx, children, ...rest }: StdButtonProps) {
   return (
     <Button variant="contained" color="error" sx={sx} {...rest}>
       {children}
