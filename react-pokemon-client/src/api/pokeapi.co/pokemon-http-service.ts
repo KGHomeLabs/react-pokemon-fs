@@ -1,13 +1,15 @@
+import { injectable, inject} from 'tsyringe';
 import { POKEMON_V2_API_URLS } from './urls';
 import type IHttpClient from '../../lib/http-client/i-http-client';
+import { IHttpClientServiceToken } from '../../lib/http-client/i-http-client';
 import type IPokemonHTTPService from './i-pokemon-http-service';
 import type { DTOResourceList, DTOPokemon, DTONamedResource, DTOPokemonSpecies, DTOEvolutionChain } from './data-pokemon-api';
 
-
+@injectable()
 export default class PokemonHTTPService implements IPokemonHTTPService {
   private httpClient: IHttpClient;
 
-  constructor(httpClient: IHttpClient) {
+  constructor(@inject(IHttpClientServiceToken) httpClient: IHttpClient) {
     this.httpClient = httpClient;
   }
 

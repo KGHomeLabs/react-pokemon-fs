@@ -1,5 +1,7 @@
 import type { DTOResourceList, DTOPokemon, DTONamedResource, DTOPokemonSpecies, DTOEvolutionChain } from './data-pokemon-api';
 
+export const IPokemonHTTPServiceToken = Symbol.for('IPokemonHTTPService');
+
 export default interface IPokemonHTTPService {
   getPokemonList(limit?: number, offset?: number): Promise<DTOResourceList>;
   getPokemonByIdOrName(idOrName: string | number): Promise<DTOPokemon>;

@@ -1,8 +1,11 @@
+import { injectable} from 'tsyringe';
+
 import type { AxiosInstance, AxiosRequestConfig,AxiosResponse } from 'axios';
 import type IHttpClientService from './i-http-client';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
+@injectable()
 export default class HttpClient implements IHttpClientService {
   private client: AxiosInstance;
 

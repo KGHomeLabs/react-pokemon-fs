@@ -1,10 +1,11 @@
 // used by vite to bundle the app, relies on tsconfig having ran first
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths'
 import { execSync } from 'child_process';
 import { GitBranch, AppEnv, ViteModes } from '../config/stagetypes';
 import type {ViteMode} from '../config/stagetypes';
-// Used for logging, set via define
+// Used for switching between environments, set via define
 const envVariable = 'import.meta.env.VITE_APP_ENV';
 
 const resolveAppEnv = (mode: ViteMode): AppEnv => {
@@ -94,13 +95,46 @@ export default defineConfig((options: { mode: string }) => {
   const currentAppEnv = resolveAppEnv(mode);
   console.info(`Current environment: ${currentAppEnv}`)
   return {
-    plugins: [react()],
+    plugins: [react(),tsconfigPaths()],
     define: {
       [envVariable]: JSON.stringify(currentAppEnv), // Use envVariable as the key
     },
     build: {
       sourcemap: true,
     },
+    ///to enablle decorators 2 things are needed:
+    // 1. tsconfig.json needs to have experimentalDecorators and emitDecoratorMetadata set to true
+    // 2. esbuild needs to be configured to use the tsconfigRaw with the <-for esbuild
+    // 3. optimizeDeps to use the tsconfigRaw with the same settings <-for vite dev
+    // 4. tsconfigPaths plugin is needed to resolve paths in the tsconfig.json
+    // 5. tsconfig.json needs to be relative to vite.config.ts
+    // 6. tsconfigPaths plugin is needed to resolve paths in the tsconfig.json
+    // 7. settings.json needs to be told "js/ts.implicitProjectConfig.experimentalDecorators": true,
+    esbuild: { // Enable decorators in esbuild, what a nightmare to get this working
+      //also for proper behaviour with typscript decorators I added
+      //experimentalDecorators and emitDecoratorMetadata to tsconfig.json
+      //also import tsconfigPaths from 'vite-tsconfig-paths' including its package is related to that
+      //and also plugins: [react(),tsconfigPaths()], the tsconfigPaths plugin so if you need to get rid of it
+      //there is tons to do. 
+      tsconfigRaw: {  //<-- for esbuild
+        compilerOptions: {
+          experimentalDecorators: true,
+          emitDecoratorMetadata: true,
+        },
+      },
+  },
+   optimizeDeps: { // Enable decorators in vite dev, what a nightmare to get this working
+                  //also for proper behaviour with typscript decorators I added
+      esbuildOptions: {
+        tsconfigRaw: {
+          compilerOptions: {
+            experimentalDecorators: true,
+            emitDecoratorMetadata: true,
+          },
+        },
+      },
+    },
     tsconfig: '../config/tsconfig.json', // Relative to vite.config.ts
+      
   };
 });
