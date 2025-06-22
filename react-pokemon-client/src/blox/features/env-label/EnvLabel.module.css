@@ -1,0 +1,8 @@
+.envLabel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 15px 14px;
+  border-radius: 0 0 0 17px; /* Rounded left corners for a stuck-on effect */
+  z-index: 1000;
+}

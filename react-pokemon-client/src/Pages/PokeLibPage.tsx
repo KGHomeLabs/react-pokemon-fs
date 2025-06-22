@@ -12,10 +12,11 @@ import useFullPokemonList from '../blox/Context/IPokemonContext';
 import HookDIRegistry from '../utils/DIHookRegistry';
 import type IPokemonQueryService from '../services/pokeapi.co.query/i-pokemon-query-service';
 import type { IPokemon, IEvolutionChainLink } from '../services/pokeapi.co.query/data-pokemon';
-import { isDev, isPreview, getAppEnv } from '../../config/env-switch';
+import { getAppEnv } from '../../config/env-switch';
 
 //Utils
 import useDebounce from '../blox/CustomHooks/useDebounce';
+import EnvLabel from '../blox/features/env-label/EnvLabel';
 
 const PAGE_SIZE = 20;
 
@@ -33,7 +34,6 @@ export default function PokeLibPage() {
   //wenn sich search ändert soll ein timer gesetzt werden, this sets that timer while typing
   //debounced is whatever input of search is after 240ms of no typing
   const debounced = useDebounce(search, 240);
-
 
   useEffect(() => {
     if (filterByPokemonName) {
@@ -107,27 +107,12 @@ export default function PokeLibPage() {
   }
   return (
     <Box sx={{ p: 4 }}>
-      {/* Environment Label */}
-      {(isPreview() || isDev()) && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            right: 0,
-            backgroundColor: '#1976d2', // MUI blue
-            color: '#ffffff', // White text
-            padding: '15px 14px',
-            borderRadius: '0px 0 0 17px', // Rounded left corners for a stuck-on effect
-            zIndex: 1000,
-            fontSize: '1.1rem', // Small text for label
-          }}
-        >
-          Environment: {computedEnv}
-        </Box>
-      )}
+      <EnvLabel computedEnv={computedEnv} />
       {/* Top bar */}
       <Box display="flex" justifyContent="space-between" mb={4} bgcolor="#f5f5f5" p={2} borderRadius={1}>
+        {/* The silly test button */}
         <PokemonStdButton>The Test</PokemonStdButton>
+        {/* Filter by Pokémon series shows only when filter active */}
         {filterByPokemonName && (
           <PokemonStdButton onClick={() => setFilterByPokemonName(null)}>
             Clear Filter
@@ -143,7 +128,6 @@ export default function PokeLibPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Typography>Sort by: think of some functions here</Typography>
       </Stack>
 
       {total === 0 ? (

@@ -102,6 +102,7 @@ export default defineConfig((options: { mode: string }) => {
     build: {
       sourcemap: true,
     },
+    tsconfig: '../config/tsconfig.json', // Relative to vite.config.ts
     ///to enablle decorators 2 things are needed:
     // 1. tsconfig.json needs to have experimentalDecorators and emitDecoratorMetadata set to true
     // 2. esbuild needs to be configured to use the tsconfigRaw with the <-for esbuild
@@ -133,8 +134,6 @@ export default defineConfig((options: { mode: string }) => {
           },
         },
       },
-    },
-    tsconfig: '../config/tsconfig.json', // Relative to vite.config.ts
-      
+    },     
   };
 });
