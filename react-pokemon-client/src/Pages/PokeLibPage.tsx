@@ -27,6 +27,7 @@ export default function PokeLibPage() {
 
   // STATE get the full IPokemon[] array, I think it camye from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
+
   //behält den state aus suchfeld, wird immmer beim tippen der suche gesetzt
   const [search, setSearch] = useState('');
 
@@ -54,8 +55,11 @@ export default function PokeLibPage() {
   //run function every time the pokemons array or debounced search changes
   //but... tres importante... only the value changed no re-renders
   //useRef for functions
-  // Compute filtered Pokémon list
-  const filtered: IPokemon[] = useFilteredPokemonMemo(  //this masively manipulates state
+  // Compute filtered Pokémon list  from actually three differenct use cases:
+  // 1. When the user searches for a Pokémon by name then debounced is not null
+  // 2. When the user filters by Pokémon name then filterByPokemonName is not set from inside the pokemon card
+  // 3. when both are not set, then we show all pokemons the full list of pokemons from the context
+  const filtered: IPokemon[] = useFilteredPokemonMemo(
     pokemons,
     debounced,
     filterByPokemonName,
