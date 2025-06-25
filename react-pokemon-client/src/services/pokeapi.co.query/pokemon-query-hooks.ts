@@ -10,8 +10,7 @@ import type IPokemonQueryService from './i-pokemon-query-service';
 // Resolver for the Pokemon HTTP service gets the tsyringe container instance
 import PokemonServiceResolver from './pokemon-service-resolver';
 
-export const usePokemonListQuery = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>
-  
+export const usePokemonListQuery = ({ limit = 20, offset = 0 }: IPokemonListParams = {}) =>  
   useQuery<IPokemonListResult, Error>({
     queryKey: ['pokemonList', limit, offset],
     queryFn: async ({signal}) => {
