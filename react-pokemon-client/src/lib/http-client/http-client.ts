@@ -1,14 +1,22 @@
-import { injectable } from 'tsyringe';
+import { injectable,inject } from 'tsyringe';
 import type { IHttpClientService } from './i-http-client';
 import { HttpError, parseJsonSafely } from './fetch-error';
+import type ILogger from '../../utils/logger/i-logger';
+import { ILoggerToken } from '../../utils/logger/i-logger';
 
 @injectable()
 export default class HttpClient implements IHttpClientService {
+  private logger: ILogger;
   private baseUrl: string = '';
   private baseHeaders = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
+  // You can add more default headers if needed
+  constructor(@inject(ILoggerToken) logger: ILogger)
+  {
+    this.logger = logger;
+  }
 
   public setBaseUrl(url: string): void {
     this.baseUrl = url.replace(/\/+$/, ''); // Remove trailing slashes
@@ -27,6 +35,13 @@ export default class HttpClient implements IHttpClientService {
 
     if (!res.ok) {
       const errorBody = await parseJsonSafely(res);
+      this.logger.error(`HTTP Error: ${res.status} ${res.statusText}`, {
+        method,
+        url: fullUrl,
+        status: res.status,
+        statusText: res.statusText,
+        body: errorBody,
+      });
       throw new HttpError(res.status, res.statusText, errorBody);
     }
 
