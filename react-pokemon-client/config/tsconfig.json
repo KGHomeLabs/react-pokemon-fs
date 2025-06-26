@@ -1,14 +1,26 @@
-{/* This is used tsc to compile app specifics and point to speciffic tool related sub-configs*/
+{ /* This is used tsc to compile app specifics and point to speciffic tool related sub-configs*/
   "files": [],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
   ],
   "compilerOptions": {
-    "types": ["vite/client", "node"],
-    "baseUrl": "../",  // Relative to config/ to point to project root
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "ES2020", // Modern JavaScript
+    "types": [
+      "vite/client",
+      "node",
+    ],
+    "baseUrl": "../", // Relative to config/ to point to project root
     "paths": {
-      "@config/*": ["config/*"]  // Maps @config/ imports to config/ folder
-    }
+      "@config/*": [
+        "config/*"
+      ] // Maps @config/ imports to config/ folder
+    },
   }
 }
