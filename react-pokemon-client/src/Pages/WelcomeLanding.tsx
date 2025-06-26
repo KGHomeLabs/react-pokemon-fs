@@ -1,6 +1,6 @@
 import { SignInButton, SignedIn, SignedOut } from '@clerk/clerk-react';
 
-export const LandingPage = () => {
+export default function WelcomeLanding() {
     return (
         <div style={{ padding: '4rem', textAlign: 'center' }}>
             <h1>Welcome to CardMaster!</h1>

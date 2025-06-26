@@ -1,6 +1,6 @@
-import { UserButton } from '@clerk/clerk-react';
+//import { UserButton } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
-import { styles } from './Header.module.css'
+import styles from './Header.module.css'
 
 export function Header() {
     return (
@@ -12,6 +12,7 @@ export function Header() {
                 <Link to="/mydecks">Manage Decks</Link>
                 <Link to="/admin">Admin</Link>
             </nav>
+
         </header>
     );
 }
