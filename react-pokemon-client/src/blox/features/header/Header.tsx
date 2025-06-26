@@ -1,6 +1,6 @@
-//import { UserButton } from '@clerk/clerk-react';
+// src/blox/features/header/Header.tsx
 import { Link } from 'react-router-dom';
-import styles from './Header.module.css'
+import styles from './Header.module.css';
 
 export function Header() {
     return (
@@ -12,7 +12,8 @@ export function Header() {
                 <Link to="/mydecks">Manage Decks</Link>
                 <Link to="/admin">Admin</Link>
             </nav>
-
+            {/* Placeholder for UserButton (to be added with Clerk later) */}
+            <div className={styles.userButton}>User</div>
         </header>
     );
 }
