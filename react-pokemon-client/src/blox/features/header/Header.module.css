@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e00036;
+}
+.userButton {
+  display: flex;
+  align-items: center;
+}
+.navButton {
+  margin-right: 1rem; /* Add margin to all buttons */
+}
+.navButton:last-child {
+  margin-right: 0; /* Remove margin from the last button */
+}

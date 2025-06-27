@@ -5,8 +5,13 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { execSync } from 'child_process';
 import { GitBranch, AppEnv, ViteModes } from '../config/stagetypes';
 import type {ViteMode} from '../config/stagetypes';
+import path from 'path';
+import dotenv from 'dotenv';
 // Used for switching between environments, set via define
 const envVariable = 'import.meta.env.VITE_APP_ENV';
+dotenv.config({
+  path: path.resolve(__dirname, '../config/.env.local'),
+});
 
 const resolveAppEnv = (mode: ViteMode): AppEnv => {
   console.info('Resolving Environment . . .'); // <-- on hosting environment this will show on the build server log
@@ -94,11 +99,16 @@ export default defineConfig((options: { mode: string }) => {
   const mode = options.mode as ViteMode; // Cast mode to ViteMode for type safety
   const currentAppEnv = resolveAppEnv(mode);
   console.info(`Current environment: ${currentAppEnv}`)
+  console.info(`Vite mode: ${ mode}`);
+
   return {
     plugins: [react(),tsconfigPaths()],
+    envDir: path.resolve(__dirname, '../config'),
     define: {
       [envVariable]: JSON.stringify(currentAppEnv), // Use envVariable as the key
-    },
+      'import.meta.env.VITE_CLERK_PUBLISHABLE_KEY': JSON.stringify(process.env.VITE_CLERK_PUBLISHABLE_KEY || '')
+      //'import.meta.env.VITE_CLERK_PUBLISHABLE_KEY': JSON.stringify('pk_test_ZW1lcmdpbmctY2hpY2tlbi03MC5jbGVyay5hY2NvdW50cy5kZXYk'), 
+    },    
     build: {
       sourcemap: true,
     },
@@ -136,4 +146,4 @@ export default defineConfig((options: { mode: string }) => {
       },
     },     
   };
-});
+ });
