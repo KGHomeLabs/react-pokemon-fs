@@ -3,6 +3,28 @@
   top: 0;
   right: 0;
   padding: 15px 14px;
-  border-radius: 0 0 0 17px; /* Rounded left corners for a stuck-on effect */
-  z-index: 1000;
+  border-radius: 0 0 0 17px; /* Retain the stuck-on effect */
+  z-index: 2000; /* Above header */
+  background-color: #1976d2; /* Ensure background is set here too for consistency */
+  color: #ffffff;
+  font-size: 1.1rem;
+  transform: translateY(-100%); /* Start hidden above the viewport */
+  transition: transform 0.3s ease-in-out;
+}
+
+.envLabel:hover {
+  transform: translateY(0); /* Slide down to full visibility on hover */
+}
+
+/* Hint stripe below the label */
+.envLabel::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 15px;
+  right: 0;
+  height: 2px;
+  background-color: #1976d2;
+  opacity: 0.7;
+  width: 100%; /* Ensure it spans the label width */
 }
