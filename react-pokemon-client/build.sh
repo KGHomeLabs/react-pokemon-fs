@@ -1,7 +1,6 @@
 #cd .. || exit 1  # Move to project root if run from build/
 echo "Current branch: $CF_PAGES_BRANCH"
-echo "VITE_CLERK_PUBLISHABLE_KEY: $VITE_CLERK_PUBLISHABLE_KEY"
-echo "VITE_TEST_VAR: $VITE_TEST_VAR"
+
 case "$CF_PAGES_BRANCH" in
   master)
     export VITE_APP_ENV=production
