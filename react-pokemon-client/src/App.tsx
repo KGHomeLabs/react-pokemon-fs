@@ -15,6 +15,7 @@ import WelcomeLanding from './Pages/WelcomeLanding';
 import PokeLibPage from './Pages/PokeLibPage';
 import ManageDecks from './Pages/ManageDecks';
 import Admin from './Pages/Admin';
+import ProtectedRoute from './blox/Components/ProtectedRoute';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: Infinity } },
@@ -25,10 +26,26 @@ const App = () => (
     <PokemonContextProvider>
       <Routes>
         <Route path="/" element={<TopLayout />}>
-          <Route index element={<WelcomeLanding />} /> {/* Default landing page */}
-          <Route path="pokelib" element={<PokeLibPage />} />
-          <Route path="mydecks" element={<ManageDecks />} />
-          <Route path="admin" element={<Admin />} />
+          <Route index element={<WelcomeLanding />} /> {/* Public landing page */}
+          <Route path="pokelib" element={
+            <ProtectedRoute>
+              <PokeLibPage />
+            </ProtectedRoute>
+          }
+          />
+          <Route path="mydecks" element={
+            <ProtectedRoute>
+              <ManageDecks />
+            </ProtectedRoute>
+          }
+          />
+          <Route
+            path="admin" element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
       <ToastContainer
@@ -45,7 +62,7 @@ const App = () => (
     </PokemonContextProvider>
     {/*/works best next to query provider as direct child */}
     {isDev() && <ReactQueryDevtools initialIsOpen={true} />}
-  </QueryClientProvider>
+  </QueryClientProvider >
 );
 
 export default App;

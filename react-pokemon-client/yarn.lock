@@ -1837,6 +1837,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.6.0":
+  version: 16.6.0
+  resolution: "dotenv@npm:16.6.0"
+  checksum: 10c0/c1029a8656e03abc53c0522baf733131ffd4e633d8ab66c3f2d470ebdd7c5d143ffab64945afc475e60c5f803f0e734a9f9247949d17cc8ff564fba5c15978b1
+  languageName: node
+  linkType: hard
+
 "dunder-proto@npm:^1.0.1":
   version: 1.0.1
   resolution: "dunder-proto@npm:1.0.1"
@@ -3296,6 +3303,7 @@ __metadata:
     "@types/react-router-dom": "npm:^5.3.3"
     "@vitejs/plugin-react": "npm:^4.4.1"
     axios: "npm:^1.9.0"
+    dotenv: "npm:^16.6.0"
     eslint: "npm:^9.25.0"
     eslint-plugin-react-hooks: "npm:^5.2.0"
     eslint-plugin-react-refresh: "npm:^0.4.19"
