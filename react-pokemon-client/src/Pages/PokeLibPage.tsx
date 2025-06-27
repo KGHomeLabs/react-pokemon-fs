@@ -12,18 +12,16 @@ import useFullPokemonList from '../blox/Context/IPokemonContext';
 import HookDIRegistry from '../di/DIHookRegistry';
 import type IPokemonQueryService from '../services/pokeapi.co.query/i-pokemon-query-service';
 import type { IPokemon } from '../services/pokeapi.co.query/data-pokemon';
-import { getAppEnv } from '../../config/env-switch';
 
 //Utils
 import useDebounce from '../blox/CustomHooks/useDebounce';
-import EnvLabel from '../blox/features/env-label/EnvLabel';
+
 import { Paginator } from '../blox/features/pagination/Paginator';
 import { useFilteredPokemonMemo } from '../blox/CustomHooks/useFilteredPokemonMemo';
 
 const PAGE_SIZE = 20;
 
 export default function PokeLibPage() {
-  const computedEnv = getAppEnv();
 
   // STATE get the full IPokemon[] array, I think it camye from the context
   const { pokemons, isLoading, error, filterByPokemonName, setFilterByPokemonName } = useFullPokemonList();
@@ -100,7 +98,6 @@ export default function PokeLibPage() {
   // this is the main content of the page, showing the Pokémon list and the filter/search
   return (
     <Box sx={{ p: 4 }}>
-      <EnvLabel computedEnv={computedEnv} />
       {/* Top bar */}
       <Box display="flex" justifyContent="space-between" mb={4} bgcolor="#f5f5f5" p={2} borderRadius={1}>
         {/* The silly test button */}
