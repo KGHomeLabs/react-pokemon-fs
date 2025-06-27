@@ -11,16 +11,13 @@
   font-weight: bold;
   color: #e00036;
 }
-.links {
-  display: flex;
-  margin-left: 2rem;
-}
-.links a {
-  margin: 0 1rem;
-  text-decoration: none;
-  color: #444;
-}
 .userButton {
   display: flex;
   align-items: center;
+}
+.navButton {
+  margin-right: 1rem; /* Add margin to all buttons */
+}
+.navButton:last-child {
+  margin-right: 0; /* Remove margin from the last button */
 }
